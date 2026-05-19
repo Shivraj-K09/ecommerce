@@ -1,5 +1,6 @@
 import React, { startTransition, ViewTransition, useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { AnimatePresence } from "motion/react";
+import * as m from "motion/react-m";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { Product } from "@/lib/data";
@@ -27,7 +28,7 @@ function SafeTransition({ children, name, }: {
 }
 export function FlagshipCard({ product, idx, hoveredPanel, setHoveredPanel, handleAddDirect, }: FlagshipCardProps) {
     const { theme } = useTheme();
-    const router = useRouter();
+    const { push } = useRouter();
     const [isTransitioning, setIsTransitioning] = useState(false);
     const [mounted, setMounted] = useState(false);
     React.useEffect(() => {
@@ -37,19 +38,43 @@ export function FlagshipCard({ product, idx, hoveredPanel, setHoveredPanel, hand
     const activeTheme = mounted ? theme : "dark";
     const isHovered = hoveredPanel === idx;
     const isAnyHovered = hoveredPanel !== null;
-    return (<motion.div onMouseEnter={() => setHoveredPanel(idx)} onMouseLeave={() => setHoveredPanel(null)} onClick={() => {
-            setIsTransitioning(true);
-            startTransition(() => {
-                router.push(`/category/${product.category}/product/${product.id}`);
-            });
-        }} className="relative min-w-0 flex-1 basis-0 border-b md:border-b-0 md:border-r last:border-r-0 border-border overflow-hidden group flex flex-col justify-between p-8 bg-card hover:bg-muted/10 transition-all duration-500 cursor-pointer" animate={{
+
+    function handlePanelEnter() {
+        setHoveredPanel(idx);
+    }
+
+    function handlePanelLeave() {
+        setHoveredPanel(null);
+    }
+
+    function handlePanelNavigate() {
+        setIsTransitioning(true);
+        startTransition(() => {
+            push(`/category/${product.category}/product/${product.id}`);
+        });
+    }
+
+    function handleViewClick(e: React.MouseEvent) {
+        e.stopPropagation();
+        setIsTransitioning(true);
+        startTransition(() => {
+            push(`/category/${product.category}/product/${product.id}`);
+        });
+    }
+
+    function handleBuyClick(e: React.MouseEvent) {
+        setIsTransitioning(true);
+        handleAddDirect(product, e);
+    }
+
+    return (<m.div onMouseEnter={handlePanelEnter} onMouseLeave={handlePanelLeave} onClick={handlePanelNavigate} className="relative min-w-0 flex-1 basis-0 border-b md:border-b-0 md:border-r last:border-r-0 border-border overflow-hidden group flex flex-col justify-between p-8 bg-card hover:bg-muted/10 transition-all duration-500 cursor-pointer" animate={{
             flexGrow: isHovered ? 1.45 : isAnyHovered ? 0.85 : 1,
             flexShrink: 1,
         }} transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}>
       <div className="absolute inset-0 z-0 select-none pointer-events-none overflow-hidden transition-all duration-700">
         <div className="absolute inset-0 bg-linear-to-b from-background/90 via-background/15 to-background/95 z-10 pointer-events-none"/>
 
-        <motion.div className="w-full h-full relative" animate={{
+        <m.div className="w-full h-full relative" animate={{
             scale: isHovered ? 1.03 : 1,
         }} transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}>
           <SafeTransition name={isTransitioning ? `product-image-${product.id}` : undefined}>
@@ -69,7 +94,7 @@ export function FlagshipCard({ product, idx, hoveredPanel, setHoveredPanel, hand
         }}/>
             </div>
           </SafeTransition>
-        </motion.div>
+        </m.div>
       </div>
 
       <AmbientVisualizer type={product.id} isHovered={isHovered} theme={activeTheme || "dark"}/>
@@ -87,8 +112,8 @@ export function FlagshipCard({ product, idx, hoveredPanel, setHoveredPanel, hand
       <div className="flex-1 min-h-[140px] md:min-h-[220px]"/>
 
       <div className="z-20 relative mt-auto flex flex-col gap-4">
-        <motion.div layout className="flex flex-col select-none">
-          <motion.div layout="position" className="transition-transform duration-300">
+        <m.div layout className="flex flex-col select-none">
+          <m.div layout="position" className="transition-transform duration-300">
             <SafeTransition name={isTransitioning ? `product-name-${product.id}` : undefined}>
               <h2 className="font-sans font-semibold text-2xl md:text-3xl lg:text-4xl uppercase tracking-tighter leading-none text-foreground wrap-break-word w-full">
                 {product.name.split(" ").slice(0, -1).join(" ") || product.name}
@@ -97,16 +122,16 @@ export function FlagshipCard({ product, idx, hoveredPanel, setHoveredPanel, hand
                 </span>
               </h2>
             </SafeTransition>
-          </motion.div>
+          </m.div>
 
           <AnimatePresence initial={false}>
-            {isHovered && (<motion.div initial={{ opacity: 0, height: 0, marginTop: 0 }} animate={{ opacity: 1, height: "auto", marginTop: 16 }} exit={{ opacity: 0, height: 0, marginTop: 0 }} transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }} className="overflow-hidden w-full">
+            {isHovered && (<m.div initial={{ opacity: 0, height: 0, marginTop: 0 }} animate={{ opacity: 1, height: "auto", marginTop: 16 }} exit={{ opacity: 0, height: 0, marginTop: 0 }} transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }} className="overflow-hidden w-full">
                 <p className="font-sans text-sm leading-relaxed text-foreground w-full">
                   {product.description}
                 </p>
-              </motion.div>)}
+              </m.div>)}
           </AnimatePresence>
-        </motion.div>
+        </m.div>
 
         <div className="border-t border-border pt-4 flex flex-col gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           {Object.entries(product.specifications)
@@ -119,33 +144,24 @@ export function FlagshipCard({ product, idx, hoveredPanel, setHoveredPanel, hand
 
         <div className="flex items-center justify-between gap-4 pt-2">
           <div className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-foreground animate-pulse"/>
+            <span className="size-1.5 rounded-full bg-foreground animate-pulse"/>
             <span className="font-mono text-store-min tracking-[0.15em] uppercase text-muted-foreground">
               IN STOCK
             </span>
           </div>
 
           <div className="flex items-center gap-2">
-            <Button onClick={(e) => {
-            e.stopPropagation();
-            setIsTransitioning(true);
-            startTransition(() => {
-                router.push(`/category/${product.category}/product/${product.id}`);
-            });
-        }} variant="outline" size="sm" className="font-mono text-[9px] tracking-[0.2em] font-semibold uppercase px-3 h-8 flex items-center gap-1.5 cursor-pointer bg-background/50 hover:bg-background">
+            <Button onClick={handleViewClick} variant="outline" size="sm" className="font-mono text-[9px] tracking-[0.2em] font-semibold uppercase px-3 h-8 flex items-center gap-1.5 cursor-pointer bg-background/50 hover:bg-background">
               VIEW
-              <IconEye className="w-3.5 h-3.5 stroke-[1.5]"/>
+              <IconEye className="size-3.5 stroke-[1.5]"/>
             </Button>
 
-            <Button onClick={(e) => {
-            setIsTransitioning(true);
-            handleAddDirect(product, e);
-        }} variant="default" size="sm" className="font-mono text-[9px] tracking-[0.2em] font-semibold uppercase px-3 h-8 flex items-center gap-1.5 cursor-pointer">
+            <Button onClick={handleBuyClick} variant="default" size="sm" className="font-mono text-[9px] tracking-[0.2em] font-semibold uppercase px-3 h-8 flex items-center gap-1.5 cursor-pointer">
               BUY NOW
-              <IconShoppingBag className="w-3.5 h-3.5 stroke-[1.5]"/>
+              <IconShoppingBag className="size-3.5 stroke-[1.5]"/>
             </Button>
           </div>
         </div>
       </div>
-    </motion.div>);
+    </m.div>);
 }

@@ -8,7 +8,32 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { IconBrandInstagram, IconBrandTwitter, IconBrandYoutube, IconLock, IconShieldCheck, IconCreditCard, IconTruck } from "@tabler/icons-react";
 export function Footer() {
-    const router = useRouter();
+    const { push } = useRouter();
+    function goHome() {
+        startTransition(() => {
+            push("/");
+        });
+    }
+    function goElectronics() {
+        startTransition(() => {
+            push("/category/electronics");
+        });
+    }
+    function goLiving() {
+        startTransition(() => {
+            push("/category/living");
+        });
+    }
+    function goWriting() {
+        startTransition(() => {
+            push("/category/writing");
+        });
+    }
+    function goWellness() {
+        startTransition(() => {
+            push("/category/wellness");
+        });
+    }
     const handleSubscribe = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const data = new FormData(e.currentTarget);
@@ -29,9 +54,9 @@ export function Footer() {
           
           <div className="lg:col-span-5 flex flex-col gap-6">
             <div className="flex flex-col gap-2">
-              <span onClick={() => startTransition(() => router.push("/"))} className="font-sans font-semibold text-lg tracking-[0.25em] uppercase text-foreground cursor-pointer hover:opacity-80 transition-opacity w-fit">
+              <button type="button" onClick={goHome} className="font-sans font-semibold text-lg tracking-[0.25em] uppercase text-foreground cursor-pointer hover:opacity-80 transition-opacity w-fit text-left bg-transparent border-0 p-0">
                 AURA
-              </span>
+              </button>
               <p className="font-sans font-light text-xs text-muted-foreground max-w-[360px] leading-relaxed">
                 Timeless spatial products crafted with absolute material precision to elevate and complement physical living environments.
               </p>
@@ -61,27 +86,27 @@ export function Footer() {
             </span>
             <ul className="flex flex-col gap-2.5 font-sans font-light text-xs text-muted-foreground uppercase">
               <li>
-                <button onClick={() => startTransition(() => router.push("/"))} className="hover:text-foreground hover:underline transition-colors bg-transparent border-none p-0 cursor-pointer text-left">
+                <button type="button" onClick={goHome} className="hover:text-foreground hover:underline transition-colors bg-transparent border-none p-0 cursor-pointer text-left">
                   Shop All
                 </button>
               </li>
               <li>
-                <button onClick={() => startTransition(() => router.push("/category/electronics"))} className="hover:text-foreground hover:underline transition-colors bg-transparent border-none p-0 cursor-pointer text-left">
+                <button type="button" onClick={goElectronics} className="hover:text-foreground hover:underline transition-colors bg-transparent border-none p-0 cursor-pointer text-left">
                   Audio
                 </button>
               </li>
               <li>
-                <button onClick={() => startTransition(() => router.push("/category/living"))} className="hover:text-foreground hover:underline transition-colors bg-transparent border-none p-0 cursor-pointer text-left">
+                <button type="button" onClick={goLiving} className="hover:text-foreground hover:underline transition-colors bg-transparent border-none p-0 cursor-pointer text-left">
                   Living
                 </button>
               </li>
               <li>
-                <button onClick={() => startTransition(() => router.push("/category/writing"))} className="hover:text-foreground hover:underline transition-colors bg-transparent border-none p-0 cursor-pointer text-left">
+                <button type="button" onClick={goWriting} className="hover:text-foreground hover:underline transition-colors bg-transparent border-none p-0 cursor-pointer text-left">
                   Tactile
                 </button>
               </li>
               <li>
-                <button onClick={() => startTransition(() => router.push("/category/wellness"))} className="hover:text-foreground hover:underline transition-colors bg-transparent border-none p-0 cursor-pointer text-left">
+                <button type="button" onClick={goWellness} className="hover:text-foreground hover:underline transition-colors bg-transparent border-none p-0 cursor-pointer text-left">
                   Wellness
                 </button>
               </li>
@@ -121,13 +146,13 @@ export function Footer() {
               </span>
               <div className="flex gap-4 text-muted-foreground">
                 <a href="https://instagram.com" target="_blank" rel="noreferrer" className="hover:text-foreground transition-colors" title="Instagram">
-                  <IconBrandInstagram className="w-5 h-5 stroke-[1.5]"/>
+                  <IconBrandInstagram className="size-5 stroke-[1.5]"/>
                 </a>
                 <a href="https://twitter.com" target="_blank" rel="noreferrer" className="hover:text-foreground transition-colors" title="Twitter">
-                  <IconBrandTwitter className="w-5 h-5 stroke-[1.5]"/>
+                  <IconBrandTwitter className="size-5 stroke-[1.5]"/>
                 </a>
                 <a href="https://youtube.com" target="_blank" rel="noreferrer" className="hover:text-foreground transition-colors" title="YouTube">
-                  <IconBrandYoutube className="w-5 h-5 stroke-[1.5]"/>
+                  <IconBrandYoutube className="size-5 stroke-[1.5]"/>
                 </a>
               </div>
             </div>
@@ -141,28 +166,28 @@ export function Footer() {
         
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 py-2 select-none">
           <div className="flex items-center gap-3">
-            <IconTruck className="w-5 h-5 text-muted-foreground stroke-[1.2]"/>
+            <IconTruck className="size-5 text-muted-foreground stroke-[1.2]"/>
             <div className="flex flex-col text-left">
               <span className="font-sans text-[11px] font-semibold text-foreground uppercase">FREE SHIPPING</span>
               <span className="font-mono text-[9px] text-muted-foreground uppercase mt-0.5">ON ORDERS OVER ₹15,000</span>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <IconLock className="w-5 h-5 text-muted-foreground stroke-[1.2]"/>
+            <IconLock className="size-5 text-muted-foreground stroke-[1.2]"/>
             <div className="flex flex-col text-left">
               <span className="font-sans text-[11px] font-semibold text-foreground uppercase">SECURE PAYMENT</span>
               <span className="font-mono text-[9px] text-muted-foreground uppercase mt-0.5">256-BIT ENCRYPTED SSL</span>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <IconShieldCheck className="w-5 h-5 text-muted-foreground stroke-[1.2]"/>
+            <IconShieldCheck className="size-5 text-muted-foreground stroke-[1.2]"/>
             <div className="flex flex-col text-left">
               <span className="font-sans text-[11px] font-semibold text-foreground uppercase">AUTHENTIC ORIGINAL</span>
               <span className="font-mono text-[9px] text-muted-foreground uppercase mt-0.5">DIRECT FROM ARCHIVE</span>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <IconCreditCard className="w-5 h-5 text-muted-foreground stroke-[1.2]"/>
+            <IconCreditCard className="size-5 text-muted-foreground stroke-[1.2]"/>
             <div className="flex flex-col text-left">
               <span className="font-sans text-[11px] font-semibold text-foreground uppercase">FLEXIBLE PAY</span>
               <span className="font-mono text-[9px] text-muted-foreground uppercase mt-0.5">AMEX, VISA, APPLE PAY</span>

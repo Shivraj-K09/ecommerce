@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import { IconArrowUpRight, IconCpu, IconHome, IconPencil, IconActivity } from "@tabler/icons-react";
 export default function Home() {
     const { theme, setTheme } = useTheme();
-    const router = useRouter();
+    const { push } = useRouter();
     const addToCart = useStore((state) => state.addToCart);
     const [hoveredPanel, setHoveredPanel] = useState<number | null>(null);
     const [flagshipIds] = useState<string[]>([
@@ -45,7 +45,7 @@ export default function Home() {
             description: `${product.name} is now in your shopping bag.`,
         });
         startTransition(() => {
-            router.push("/cart");
+            push("/cart");
         });
     };
     const activeFlagshipProducts = flagshipIds.map((id) => PRODUCTS.find((p) => p.id === id) || PRODUCTS[0]);
@@ -53,6 +53,26 @@ export default function Home() {
     const livingProducts = PRODUCTS.filter((p) => p.category === "living");
     const writingProducts = PRODUCTS.filter((p) => p.category === "writing");
     const wellnessProducts = PRODUCTS.filter((p) => p.category === "wellness");
+    function exploreElectronics() {
+        startTransition(() => {
+            push("/category/electronics");
+        });
+    }
+    function exploreLiving() {
+        startTransition(() => {
+            push("/category/living");
+        });
+    }
+    function exploreWriting() {
+        startTransition(() => {
+            push("/category/writing");
+        });
+    }
+    function exploreWellness() {
+        startTransition(() => {
+            push("/category/wellness");
+        });
+    }
     return (<div className="relative w-full bg-background text-foreground overflow-x-hidden font-sans select-none transition-colors duration-500 flex flex-col">
       <div className="absolute inset-0 pointer-events-none z-0">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-muted/30 via-transparent to-transparent pointer-events-none"/>
@@ -71,7 +91,7 @@ export default function Home() {
           <div className="flex justify-between items-end border-b border-zinc-200 dark:border-zinc-800/80 pb-5">
             <div className="flex flex-col gap-2 text-left">
               <div className="flex items-center gap-2">
-                <IconCpu className="w-4 h-4 text-zinc-400 dark:text-zinc-600"/>
+                <IconCpu className="size-4 text-zinc-400 dark:text-zinc-600"/>
                 <span className="font-mono text-[9px] tracking-[0.25em] text-zinc-400 dark:text-zinc-500 uppercase font-bold">
                   [ SPECTRUM 01 / ACOUSTICS & CYBERNETICS ]
                 </span>
@@ -80,8 +100,8 @@ export default function Home() {
                 Audio & Tech
               </h2>
             </div>
-            <button onClick={() => startTransition(() => router.push("/category/electronics"))} className="font-mono text-[9.5px] tracking-widest text-muted-foreground hover:text-foreground uppercase flex items-center gap-1.5 transition-colors cursor-pointer">
-              EXPLORE INDEX <IconArrowUpRight className="w-3.5 h-3.5"/>
+            <button type="button" onClick={exploreElectronics} className="font-mono text-[9.5px] tracking-widest text-muted-foreground hover:text-foreground uppercase flex items-center gap-1.5 transition-colors cursor-pointer">
+              EXPLORE INDEX <IconArrowUpRight className="size-3.5"/>
             </button>
           </div>
 
@@ -95,7 +115,7 @@ export default function Home() {
           <div className="flex justify-between items-end border-b border-zinc-200 dark:border-zinc-800/80 pb-5">
             <div className="flex flex-col gap-2 text-left">
               <div className="flex items-center gap-2">
-                <IconHome className="w-4 h-4 text-zinc-400 dark:text-zinc-600"/>
+                <IconHome className="size-4 text-zinc-400 dark:text-zinc-600"/>
                 <span className="font-mono text-[9px] tracking-[0.25em] text-zinc-400 dark:text-zinc-500 uppercase font-bold">
                   [ SPECTRUM 02 / ORGANIC SPATIAL ALIGNMENT ]
                 </span>
@@ -104,8 +124,8 @@ export default function Home() {
                 Home & Living
               </h2>
             </div>
-            <button onClick={() => startTransition(() => router.push("/category/living"))} className="font-mono text-[9.5px] tracking-widest text-muted-foreground hover:text-foreground uppercase flex items-center gap-1.5 transition-colors cursor-pointer">
-              EXPLORE INDEX <IconArrowUpRight className="w-3.5 h-3.5"/>
+            <button type="button" onClick={exploreLiving} className="font-mono text-[9.5px] tracking-widest text-muted-foreground hover:text-foreground uppercase flex items-center gap-1.5 transition-colors cursor-pointer">
+              EXPLORE INDEX <IconArrowUpRight className="size-3.5"/>
             </button>
           </div>
 
@@ -119,7 +139,7 @@ export default function Home() {
           <div className="flex justify-between items-end border-b border-zinc-200 dark:border-zinc-800/80 pb-5">
             <div className="flex flex-col gap-2 text-left">
               <div className="flex items-center gap-2">
-                <IconPencil className="w-4 h-4 text-zinc-400 dark:text-zinc-600"/>
+                <IconPencil className="size-4 text-zinc-400 dark:text-zinc-600"/>
                 <span className="font-mono text-[9px] tracking-[0.25em] text-zinc-400 dark:text-zinc-500 uppercase font-bold">
                   [ SPECTRUM 03 / TACTILE INSTRUMENTS & DRAFTS ]
                 </span>
@@ -128,8 +148,8 @@ export default function Home() {
                 Tactile Writing
               </h2>
             </div>
-            <button onClick={() => startTransition(() => router.push("/category/writing"))} className="font-mono text-[9.5px] tracking-widest text-muted-foreground hover:text-foreground uppercase flex items-center gap-1.5 transition-colors cursor-pointer">
-              EXPLORE INDEX <IconArrowUpRight className="w-3.5 h-3.5"/>
+            <button type="button" onClick={exploreWriting} className="font-mono text-[9.5px] tracking-widest text-muted-foreground hover:text-foreground uppercase flex items-center gap-1.5 transition-colors cursor-pointer">
+              EXPLORE INDEX <IconArrowUpRight className="size-3.5"/>
             </button>
           </div>
 
@@ -143,7 +163,7 @@ export default function Home() {
           <div className="flex justify-between items-end border-b border-zinc-200 dark:border-zinc-800/80 pb-5">
             <div className="flex flex-col gap-2 text-left">
               <div className="flex items-center gap-2">
-                <IconActivity className="w-4 h-4 text-zinc-400 dark:text-zinc-600"/>
+                <IconActivity className="size-4 text-zinc-400 dark:text-zinc-600"/>
                 <span className="font-mono text-[9px] tracking-[0.25em] text-zinc-400 dark:text-zinc-500 uppercase font-bold">
                   [ SPECTRUM 04 / SENSORY CALM & BOTANICAL AURA ]
                 </span>
@@ -152,8 +172,8 @@ export default function Home() {
                 Wellness & Aroma
               </h2>
             </div>
-            <button onClick={() => startTransition(() => router.push("/category/wellness"))} className="font-mono text-[9.5px] tracking-widest text-muted-foreground hover:text-foreground uppercase flex items-center gap-1.5 transition-colors cursor-pointer">
-              EXPLORE INDEX <IconArrowUpRight className="w-3.5 h-3.5"/>
+            <button type="button" onClick={exploreWellness} className="font-mono text-[9.5px] tracking-widest text-muted-foreground hover:text-foreground uppercase flex items-center gap-1.5 transition-colors cursor-pointer">
+              EXPLORE INDEX <IconArrowUpRight className="size-3.5"/>
             </button>
           </div>
 

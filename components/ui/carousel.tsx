@@ -1,4 +1,5 @@
 "use client";
+import { use } from "react";
 import * as React from "react";
 import useEmblaCarousel, { type UseEmblaCarouselType, } from "embla-carousel-react";
 import { cn } from "@/lib/utils";
@@ -24,7 +25,7 @@ type CarouselContextProps = {
 } & CarouselProps;
 const CarouselContext = React.createContext<CarouselContextProps | null>(null);
 function useCarousel() {
-    const context = React.useContext(CarouselContext);
+    const context = use(CarouselContext);
     if (!context) {
         throw new Error("useCarousel must be used within a <Carousel />");
     }
@@ -49,6 +50,14 @@ function Carousel({ orientation = "horizontal", opts, setApi, plugins, className
     const scrollNext = React.useCallback(() => {
         api?.scrollNext();
     }, [api]);
+    const setApiRef = React.useRef(setApi);
+    React.useEffect(() => {
+        setApiRef.current = setApi;
+    });
+    const onSelectRef = React.useRef(onSelect);
+    React.useEffect(() => {
+        onSelectRef.current = onSelect;
+    });
     const handleKeyDown = React.useCallback((event: React.KeyboardEvent<HTMLDivElement>) => {
         if (event.key === "ArrowLeft") {
             event.preventDefault();
@@ -60,23 +69,25 @@ function Carousel({ orientation = "horizontal", opts, setApi, plugins, className
         }
     }, [scrollPrev, scrollNext]);
     React.useEffect(() => {
-        if (!api || !setApi)
+        if (!api)
             return;
-        setApi(api);
-    }, [api, setApi]);
+        setApiRef.current?.(api);
+    }, [api]);
     React.useEffect(() => {
         if (!api)
             return;
-        const timer = setTimeout(() => {
-            onSelect(api);
-        }, 0);
-        api.on("reInit", onSelect);
-        api.on("select", onSelect);
+        const sync = () => {
+            onSelectRef.current(api);
+        };
+        const timer = setTimeout(sync, 0);
+        api.on("reInit", sync);
+        api.on("select", sync);
         return () => {
             clearTimeout(timer);
-            api?.off("select", onSelect);
+            api.off("reInit", sync);
+            api.off("select", sync);
         };
-    }, [api, onSelect]);
+    }, [api]);
     return (<CarouselContext.Provider value={{
             carouselRef,
             api: api,

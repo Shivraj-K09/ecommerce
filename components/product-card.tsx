@@ -25,7 +25,7 @@ function SafeTransition({ children, name, }: {
     </ViewTransition>);
 }
 export function ProductCard({ product, categoryId, disableTransitionNames, className, }: ProductCardProps) {
-    const router = useRouter();
+    const { push } = useRouter();
     const addToCart = useStore((state) => state.addToCart);
     const [isTransitioning, setIsTransitioning] = useState(false);
     const resolvedCategoryId = categoryId || product.category;
@@ -37,22 +37,29 @@ export function ProductCard({ product, categoryId, disableTransitionNames, class
         });
         setIsTransitioning(true);
         startTransition(() => {
-            router.push("/cart");
+            push("/cart");
         });
     };
     const handleViewDirect = (e: React.MouseEvent) => {
         e.stopPropagation();
         setIsTransitioning(true);
         startTransition(() => {
-            router.push(`/category/${resolvedCategoryId}/product/${product.id}`);
+            push(`/category/${resolvedCategoryId}/product/${product.id}`);
         });
     };
-    return (<div onClick={() => {
-            setIsTransitioning(true);
-            startTransition(() => {
-                router.push(`/category/${resolvedCategoryId}/product/${product.id}`);
-            });
-        }} className={`group relative w-full aspect-3/4 overflow-hidden rounded-2xl bg-[#f4f3ef] dark:bg-[#161615] border border-transparent hover:border-foreground/5 transition-all duration-500 shadow-sm flex flex-col cursor-pointer select-none ${className || ""}`}>
+    const goToProduct = () => {
+        setIsTransitioning(true);
+        startTransition(() => {
+            push(`/category/${resolvedCategoryId}/product/${product.id}`);
+        });
+    };
+    function handleCardKeyDown(e: React.KeyboardEvent) {
+        if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            goToProduct();
+        }
+    }
+    return (<div role="button" tabIndex={0} onClick={goToProduct} onKeyDown={handleCardKeyDown} className={`group relative w-full aspect-3/4 overflow-hidden rounded-2xl bg-[#f4f3ef] dark:bg-[#161615] border border-transparent hover:border-foreground/5 transition-all duration-500 shadow-sm flex flex-col cursor-pointer select-none ${className || ""}`}>
       
       <SafeTransition name={disableTransitionNames || !isTransitioning
             ? undefined
@@ -95,13 +102,13 @@ export function ProductCard({ product, categoryId, disableTransitionNames, class
           
           <button type="button" onClick={handleViewDirect} className="flex-1 py-2 bg-white/10 hover:bg-white border-[0.5px] border-white/20 text-white hover:text-black font-mono text-[8.5px] tracking-[0.2em] uppercase transition-all duration-300 flex items-center justify-center gap-1.5 cursor-pointer active:scale-[0.99] shadow-sm rounded-sm">
             VIEW
-            <IconEye className="w-3 h-3 stroke-[1.2]"/>
+            <IconEye className="size-3 stroke-[1.2]"/>
           </button>
 
           
           <button type="button" onClick={handleAddDirect} className="flex-1 py-2 bg-transparent border-[0.5px] border-white/20 text-white hover:border-white hover:bg-white hover:text-black font-mono text-[8.5px] tracking-[0.2em] uppercase transition-all duration-300 flex items-center justify-center gap-1.5 cursor-pointer active:scale-[0.99] shadow-sm rounded-sm">
             BUY
-            <IconShoppingBag className="w-3 h-3 stroke-[1.2]"/>
+            <IconShoppingBag className="size-3 stroke-[1.2]"/>
           </button>
         </div>
       </div>

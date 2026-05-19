@@ -1,6 +1,5 @@
 "use client";
-import React, { use, useState, useEffect, startTransition, } from "react";
-import { useRouter } from "next/navigation";
+import React, { use, useState, startTransition, } from "react";
 import { ShoppingCartDrawer } from "@/components/shopping-cart-drawer";
 import { ProductCard } from "@/components/product-card";
 import { PRODUCTS, CATEGORY_METADATA } from "@/lib/data";
@@ -11,14 +10,8 @@ export default function CategoryPage({ params, }: {
     }>;
 }) {
     const { id } = use(params);
-    const router = useRouter();
     const [priceFilter, setPriceFilter] = useState<"all" | "under-150" | "under-300" | "over-300">("all");
     const [sortBy, setSortBy] = useState<"featured" | "price-low" | "price-high">("featured");
-    useEffect(() => {
-        if (id === "all") {
-            router.replace("/");
-        }
-    }, [id, router]);
     const meta = CATEGORY_METADATA[id] || CATEGORY_METADATA.all;
     const handlePriceFilterChange = (filter: "all" | "under-150" | "under-300" | "over-300") => {
         startTransition(() => {
@@ -40,13 +33,38 @@ export default function CategoryPage({ params, }: {
             return product.price >= 300;
         return true;
     });
-    const sortedProducts = [...filteredProducts].sort((a, b) => {
+    const sortedProducts = filteredProducts.toSorted((a, b) => {
         if (sortBy === "price-low")
             return a.price - b.price;
         if (sortBy === "price-high")
             return b.price - a.price;
         return 0;
     });
+    function pickPriceAll() {
+        handlePriceFilterChange("all");
+    }
+    function pickPriceUnder150() {
+        handlePriceFilterChange("under-150");
+    }
+    function pickPriceUnder300() {
+        handlePriceFilterChange("under-300");
+    }
+    function pickPriceOver300() {
+        handlePriceFilterChange("over-300");
+    }
+    function pickSortFeatured() {
+        handleSortChange("featured");
+    }
+    function pickSortPriceLow() {
+        handleSortChange("price-low");
+    }
+    function pickSortPriceHigh() {
+        handleSortChange("price-high");
+    }
+    function resetCatalogFilters() {
+        handlePriceFilterChange("all");
+        handleSortChange("featured");
+    }
     return (<div className="relative w-full bg-background text-foreground overflow-x-hidden font-sans select-none transition-colors duration-500 flex flex-col">
       <div className="absolute inset-0 pointer-events-none z-0">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-muted/30 via-transparent to-transparent pointer-events-none"/>
@@ -88,7 +106,7 @@ export default function CategoryPage({ params, }: {
 
       
       <p className="z-30 mx-auto w-full max-w-[1600px] px-4 pt-5 pb-0 text-center font-mono text-[9px] uppercase tracking-[0.22em] text-muted-foreground lg:hidden" role="note">
-        Price &amp; sort — next section
+        Price &amp; sort, next section
       </p>
 
       
@@ -113,31 +131,31 @@ export default function CategoryPage({ params, }: {
               PRICE LIMITS
             </span>
 
-            <button type="button" onClick={() => handlePriceFilterChange("all")} className={`font-mono text-[10.5px] tracking-widest uppercase text-left transition-all duration-300 py-1 cursor-pointer flex items-center gap-2 focus:outline-none ${priceFilter === "all"
+            <button type="button" onClick={pickPriceAll} className={`font-mono text-[10.5px] tracking-widest uppercase text-left transition-all duration-300 py-1 cursor-pointer flex items-center gap-2 focus:outline-none ${priceFilter === "all"
             ? "text-foreground font-semibold translate-x-1"
             : "text-muted-foreground hover:text-foreground"}`}>
-              {priceFilter === "all" && (<span className="w-1 h-1 rounded-full bg-foreground"/>)}
+              {priceFilter === "all" && (<span className="size-1 rounded-full bg-foreground"/>)}
               ALL PRICE SPECTRUMS
             </button>
 
-            <button type="button" onClick={() => handlePriceFilterChange("under-150")} className={`font-mono text-[10.5px] tracking-widest uppercase text-left transition-all duration-300 py-1 cursor-pointer flex items-center gap-2 focus:outline-none ${priceFilter === "under-150"
+            <button type="button" onClick={pickPriceUnder150} className={`font-mono text-[10.5px] tracking-widest uppercase text-left transition-all duration-300 py-1 cursor-pointer flex items-center gap-2 focus:outline-none ${priceFilter === "under-150"
             ? "text-foreground font-semibold translate-x-1"
             : "text-muted-foreground hover:text-foreground"}`}>
-              {priceFilter === "under-150" && (<span className="w-1 h-1 rounded-full bg-foreground"/>)}
+              {priceFilter === "under-150" && (<span className="size-1 rounded-full bg-foreground"/>)}
               UNDER $150
             </button>
 
-            <button type="button" onClick={() => handlePriceFilterChange("under-300")} className={`font-mono text-[10.5px] tracking-widest uppercase text-left transition-all duration-300 py-1 cursor-pointer flex items-center gap-2 focus:outline-none ${priceFilter === "under-300"
+            <button type="button" onClick={pickPriceUnder300} className={`font-mono text-[10.5px] tracking-widest uppercase text-left transition-all duration-300 py-1 cursor-pointer flex items-center gap-2 focus:outline-none ${priceFilter === "under-300"
             ? "text-foreground font-semibold translate-x-1"
             : "text-muted-foreground hover:text-foreground"}`}>
-              {priceFilter === "under-300" && (<span className="w-1 h-1 rounded-full bg-foreground"/>)}
+              {priceFilter === "under-300" && (<span className="size-1 rounded-full bg-foreground"/>)}
               UNDER $300
             </button>
 
-            <button type="button" onClick={() => handlePriceFilterChange("over-300")} className={`font-mono text-[10.5px] tracking-widest uppercase text-left transition-all duration-300 py-1 cursor-pointer flex items-center gap-2 focus:outline-none ${priceFilter === "over-300"
+            <button type="button" onClick={pickPriceOver300} className={`font-mono text-[10.5px] tracking-widest uppercase text-left transition-all duration-300 py-1 cursor-pointer flex items-center gap-2 focus:outline-none ${priceFilter === "over-300"
             ? "text-foreground font-semibold translate-x-1"
             : "text-muted-foreground hover:text-foreground"}`}>
-              {priceFilter === "over-300" && (<span className="w-1 h-1 rounded-full bg-foreground"/>)}
+              {priceFilter === "over-300" && (<span className="size-1 rounded-full bg-foreground"/>)}
               OVER $300
             </button>
           </div>
@@ -148,24 +166,24 @@ export default function CategoryPage({ params, }: {
               CHRONOLOGY SORT
             </span>
 
-            <button type="button" onClick={() => handleSortChange("featured")} className={`font-mono text-[10.5px] tracking-widest uppercase text-left transition-all duration-300 py-1 cursor-pointer flex items-center gap-2 focus:outline-none ${sortBy === "featured"
+            <button type="button" onClick={pickSortFeatured} className={`font-mono text-[10.5px] tracking-widest uppercase text-left transition-all duration-300 py-1 cursor-pointer flex items-center gap-2 focus:outline-none ${sortBy === "featured"
             ? "text-foreground font-semibold translate-x-1"
             : "text-muted-foreground hover:text-foreground"}`}>
-              {sortBy === "featured" && (<span className="w-1 h-1 rounded-full bg-foreground"/>)}
+              {sortBy === "featured" && (<span className="size-1 rounded-full bg-foreground"/>)}
               DEFAULT FEATURED
             </button>
 
-            <button type="button" onClick={() => handleSortChange("price-low")} className={`font-mono text-[10.5px] tracking-widest uppercase text-left transition-all duration-300 py-1 cursor-pointer flex items-center gap-2 focus:outline-none ${sortBy === "price-low"
+            <button type="button" onClick={pickSortPriceLow} className={`font-mono text-[10.5px] tracking-widest uppercase text-left transition-all duration-300 py-1 cursor-pointer flex items-center gap-2 focus:outline-none ${sortBy === "price-low"
             ? "text-foreground font-semibold translate-x-1"
             : "text-muted-foreground hover:text-foreground"}`}>
-              {sortBy === "price-low" && (<span className="w-1 h-1 rounded-full bg-foreground"/>)}
+              {sortBy === "price-low" && (<span className="size-1 rounded-full bg-foreground"/>)}
               PRICE: LOW TO HIGH
             </button>
 
-            <button type="button" onClick={() => handleSortChange("price-high")} className={`font-mono text-[10.5px] tracking-widest uppercase text-left transition-all duration-300 py-1 cursor-pointer flex items-center gap-2 focus:outline-none ${sortBy === "price-high"
+            <button type="button" onClick={pickSortPriceHigh} className={`font-mono text-[10.5px] tracking-widest uppercase text-left transition-all duration-300 py-1 cursor-pointer flex items-center gap-2 focus:outline-none ${sortBy === "price-high"
             ? "text-foreground font-semibold translate-x-1"
             : "text-muted-foreground hover:text-foreground"}`}>
-              {sortBy === "price-high" && (<span className="w-1 h-1 rounded-full bg-foreground"/>)}
+              {sortBy === "price-high" && (<span className="size-1 rounded-full bg-foreground"/>)}
               PRICE: HIGH TO LOW
             </button>
           </div>
@@ -178,10 +196,7 @@ export default function CategoryPage({ params, }: {
               <span className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase">
                 NO PRODUCTS MATCH THE SELECTED FILTERS.
               </span>
-              <button type="button" onClick={() => {
-                handlePriceFilterChange("all");
-                handleSortChange("featured");
-            }} className="mt-4 font-mono text-[9px] tracking-widest uppercase text-foreground hover:underline cursor-pointer">
+              <button type="button" onClick={resetCatalogFilters} className="mt-4 font-mono text-[9px] tracking-widest uppercase text-foreground hover:underline cursor-pointer">
                 RESET FILTERS
               </button>
             </div>) : (<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">

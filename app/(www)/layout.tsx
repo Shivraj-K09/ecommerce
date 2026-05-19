@@ -1,13 +1,16 @@
-"use client";
-import React from "react";
-import { HeaderNavigation } from "@/components/header-navigation";
-import { Footer } from "@/components/footer";
-export default function StorefrontLayout({ children, }: {
+import type { Metadata } from "next";
+import { StorefrontShell } from "@/components/storefront-shell";
+
+export const metadata: Metadata = {
+    title: {
+        default: "AURA — Timeless Objects & Spatial Archives",
+        template: "%s · AURA",
+    },
+    description: "An archive of curated everyday objects crafted with material precision to complement and elevate physical living environments.",
+};
+
+export default function StorefrontRouteLayout({ children }: {
     children: React.ReactNode;
 }) {
-    return (<div className="min-h-screen flex flex-col bg-background text-foreground transition-colors duration-500">
-      <HeaderNavigation />
-      <main className="flex-1 flex flex-col relative z-20">{children}</main>
-      <Footer />
-    </div>);
+    return <StorefrontShell>{children}</StorefrontShell>;
 }

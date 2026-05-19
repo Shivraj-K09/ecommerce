@@ -4,14 +4,13 @@ import { useRouter } from "next/navigation";
 import { useStore } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import Image from "next/image";
-import { ViewTransition } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { AnimatePresence } from "motion/react";
+import * as m from "motion/react-m";
 import { IconCheck } from "@tabler/icons-react";
-import { CATEGORY_LABEL_NAMES } from "@/lib/data";
 import { formatInr, FREE_SHIPPING_THRESHOLD_INR, SHIPPING_EXPRESS_INR, SHIPPING_STANDARD_INR, } from "@/lib/money";
+import { CartBagLine } from "@/components/cart-bag-line";
 export default function CartPage() {
-    const router = useRouter();
+    const { push } = useRouter();
     const [mounted, setMounted] = useState(false);
     const cart = useStore((state) => state.cart);
     const updateQuantity = useStore((state) => state.updateQuantity);
@@ -146,6 +145,87 @@ export default function CartPage() {
         }
         return v;
     };
+    function navigateHome() {
+        startTransition(() => {
+            push("/");
+        });
+    }
+    function goToStep1() {
+        setStep(1);
+    }
+    function goToStep2() {
+        if (cart.length > 0)
+            setStep(2);
+    }
+    function goToStep3() {
+        if (cart.length > 0 && deliveryForm.name)
+            setStep(3);
+    }
+    function selectStandardShipping() {
+        setShippingOption("standard");
+    }
+    function selectExpressShipping() {
+        setShippingOption("express");
+    }
+    function handleRemovePromo() {
+        setDiscountPercent(0);
+        setAppliedPromo(null);
+        toast.info("Promo code removed");
+    }
+    function handlePromoCodeChange(e: React.ChangeEvent<HTMLInputElement>) {
+        setPromoCode(e.target.value);
+    }
+    function handleDeliveryNameChange(e: React.ChangeEvent<HTMLInputElement>) {
+        setDeliveryForm((prev) => ({ ...prev, name: e.target.value }));
+    }
+    function handleDeliveryEmailChange(e: React.ChangeEvent<HTMLInputElement>) {
+        setDeliveryForm((prev) => ({ ...prev, email: e.target.value }));
+    }
+    function handleDeliveryAddressChange(e: React.ChangeEvent<HTMLInputElement>) {
+        setDeliveryForm((prev) => ({ ...prev, address: e.target.value }));
+    }
+    function handleDeliveryCityChange(e: React.ChangeEvent<HTMLInputElement>) {
+        setDeliveryForm((prev) => ({ ...prev, city: e.target.value }));
+    }
+    function handleDeliveryZipChange(e: React.ChangeEvent<HTMLInputElement>) {
+        setDeliveryForm((prev) => ({ ...prev, zip: e.target.value }));
+    }
+    function returnToBagFromDelivery() {
+        setStep(1);
+    }
+    function handleCardholderFocus() {
+        setIsFlipped(false);
+    }
+    function handlePaymentNumberChange(e: React.ChangeEvent<HTMLInputElement>) {
+        setPaymentForm((prev) => ({ ...prev, number: formatCardNumber(e.target.value) }));
+    }
+    function handlePaymentExpiryChange(e: React.ChangeEvent<HTMLInputElement>) {
+        setPaymentForm((prev) => ({ ...prev, expiry: formatExpiry(e.target.value) }));
+    }
+    function handlePaymentCvcChange(e: React.ChangeEvent<HTMLInputElement>) {
+        setPaymentForm((prev) => ({ ...prev, cvc: e.target.value.replace(/[^0-9]/g, "") }));
+    }
+    function handlePaymentCardholderChange(e: React.ChangeEvent<HTMLInputElement>) {
+        setPaymentForm((prev) => ({ ...prev, cardholder: e.target.value.toUpperCase() }));
+    }
+    function handleCvcFieldFocus() {
+        setIsFlipped(true);
+    }
+    function handleCvcFieldBlur() {
+        setIsFlipped(false);
+    }
+    function togglePaymentCardFlip() {
+        setIsFlipped((prev) => !prev);
+    }
+    function handlePaymentCardVisualizerKeyDown(e: React.KeyboardEvent) {
+        if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            togglePaymentCardFlip();
+        }
+    }
+    function returnToDeliveryFromPayment() {
+        setStep(2);
+    }
     return (<div className="relative w-full bg-background text-foreground overflow-x-hidden font-sans select-none flex flex-col pb-20 transition-colors duration-500">
 
       
@@ -154,15 +234,15 @@ export default function CartPage() {
         
         {step < 4 && (<div className="flex flex-col gap-6 mb-10">
             <div className="flex items-center gap-12 font-mono text-[10px] tracking-widest text-muted-foreground/45 border-b border-foreground/10 pb-5 justify-center sm:justify-start">
-              <button onClick={() => setStep(1)} className={`transition-colors duration-300 cursor-pointer ${step === 1 ? "text-foreground font-bold" : "hover:text-foreground"}`}>
+              <button type="button" onClick={goToStep1} className={`transition-colors duration-300 cursor-pointer ${step === 1 ? "text-foreground font-bold" : "hover:text-foreground"}`}>
                 1. BAG
               </button>
-              <span className="w-1 h-1 rounded-full bg-foreground/20"/>
-              <button onClick={() => cart.length > 0 && setStep(2)} disabled={cart.length === 0} className={`transition-colors duration-300 ${step === 2 ? "text-foreground font-bold cursor-pointer" : step > 2 ? "text-foreground cursor-pointer" : "cursor-not-allowed"}`}>
+              <span className="size-1 rounded-full bg-foreground/20"/>
+              <button type="button" onClick={goToStep2} disabled={cart.length === 0} className={`transition-colors duration-300 ${step === 2 ? "text-foreground font-bold cursor-pointer" : step > 2 ? "text-foreground cursor-pointer" : "cursor-not-allowed"}`}>
                 2. DELIVERY
               </button>
-              <span className="w-1 h-1 rounded-full bg-foreground/20"/>
-              <button onClick={() => cart.length > 0 && deliveryForm.name && setStep(3)} disabled={cart.length === 0 || !deliveryForm.name} className={`transition-colors duration-300 ${step === 3 ? "text-foreground font-bold cursor-pointer" : "cursor-not-allowed"}`}>
+              <span className="size-1 rounded-full bg-foreground/20"/>
+              <button type="button" onClick={goToStep3} disabled={cart.length === 0 || !deliveryForm.name} className={`transition-colors duration-300 ${step === 3 ? "text-foreground font-bold cursor-pointer" : "cursor-not-allowed"}`}>
                 3. PAYMENT
               </button>
             </div>
@@ -170,7 +250,7 @@ export default function CartPage() {
 
         <AnimatePresence mode="wait">
           
-          {step === 1 && (<motion.div key="step-1" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} transition={{ duration: 0.2 }} className="flex-1 flex flex-col">
+          {step === 1 && (<m.div key="step-1" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} transition={{ duration: 0.2 }} className="flex-1 flex flex-col">
               {cart.length === 0 ? (<div className="flex-1 flex flex-col items-center justify-center text-center py-28">
                   <h2 className="font-sans font-light text-xl tracking-wider text-foreground uppercase">
                     YOUR BAG IS EMPTY
@@ -178,7 +258,7 @@ export default function CartPage() {
                   <p className="font-sans font-light text-sm text-muted-foreground mt-2 max-w-[360px] leading-relaxed">
                     Explore our minimalist pieces to curate your flagship collection.
                   </p>
-                  <Button onClick={() => startTransition(() => router.push("/"))} variant="outline" className="mt-8 font-mono text-[10px] tracking-widest uppercase rounded-none border-foreground/20 hover:border-foreground transition-colors px-6 py-5 cursor-pointer">
+                  <Button onClick={navigateHome} variant="outline" className="mt-8 font-mono text-[10px] tracking-widest uppercase rounded-none border-foreground/20 hover:border-foreground transition-colors px-6 py-5 cursor-pointer">
                     BROWSE collections
                   </Button>
                 </div>) : (<div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
@@ -190,68 +270,7 @@ export default function CartPage() {
                     </h2>
 
                     <div className="flex flex-col border-t border-foreground/10">
-                      {cart.map((item) => (<div key={`${item.product.id}-${item.selectedColor}`} className="flex gap-6 md:gap-8 py-6 border-b border-foreground/10">
-                          
-                          <ViewTransition name={`product-image-${item.product.id}`} share="morph" default="none">
-                            <div onClick={() => startTransition(() => {
-                        router.push(`/category/${item.product.category}/product/${item.product.id}`);
-                    })} className="relative w-24 md:w-28 aspect-[3/4] bg-muted/5 border border-foreground/5 cursor-pointer shrink-0">
-                              <Image src={item.product.image} alt={item.product.name} fill priority className="object-cover" sizes="112px"/>
-                            </div>
-                          </ViewTransition>
-
-                          
-                          <div className="flex-1 flex flex-col justify-between text-left">
-                            <div className="flex flex-col gap-1">
-                              <div className="flex justify-between items-baseline gap-4">
-                                <span className="font-mono text-[10px] tracking-wider text-muted-foreground uppercase">
-                                  {CATEGORY_LABEL_NAMES[item.product.category] || item.product.category}
-                                </span>
-                                
-                                <ViewTransition name={`product-price-${item.product.id}`} share="morph" default="none">
-                                  <span className="font-mono text-xs md:text-sm tracking-wider text-foreground">
-                                    {formatInr(item.product.price * item.quantity)}
-                                  </span>
-                                </ViewTransition>
-                              </div>
-
-                              <ViewTransition name={`product-name-${item.product.id}`} share="morph" default="none">
-                                <h3 onClick={() => startTransition(() => {
-                        router.push(`/category/${item.product.category}/product/${item.product.id}`);
-                    })} className="font-sans font-light text-base md:text-lg uppercase tracking-wider text-foreground hover:text-muted-foreground transition-colors cursor-pointer mt-1">
-                                  {item.product.name}
-                                </h3>
-                              </ViewTransition>
-
-                              {item.selectedColor && (<span className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase mt-1">
-                                  COLOR: {item.selectedColor}
-                                </span>)}
-                            </div>
-
-                            
-                            <div className="flex items-center justify-between mt-6">
-                              <div className="flex items-center gap-4">
-                                <button onClick={() => updateQuantity(item.product.id, item.quantity - 1, item.selectedColor)} className="font-mono text-sm text-muted-foreground hover:text-foreground cursor-pointer transition-colors p-1">
-                                  —
-                                </button>
-                                <span className="font-mono text-[11px] text-foreground font-semibold min-w-[16px] text-center">
-                                  {item.quantity}
-                                </span>
-                                <button onClick={() => updateQuantity(item.product.id, item.quantity + 1, item.selectedColor)} className="font-mono text-sm text-muted-foreground hover:text-foreground cursor-pointer transition-colors p-1">
-                                  +
-                                </button>
-                              </div>
-
-                              <button onClick={() => {
-                        removeFromCart(item.product.id, item.selectedColor);
-                        toast.info("Removed from bag");
-                    }} className="font-mono text-[9px] tracking-widest text-muted-foreground hover:text-destructive hover:underline transition-colors uppercase cursor-pointer">
-                                REMOVE
-                              </button>
-                            </div>
-
-                          </div>
-                        </div>))}
+                      {cart.map((item) => (<CartBagLine key={`${item.product.id}-${item.selectedColor}`} item={item} push={push} updateQuantity={updateQuantity} removeFromCart={removeFromCart}/>))}
                     </div>
                   </div>
 
@@ -296,7 +315,7 @@ export default function CartPage() {
                       </span>
                       
                       <div className="flex flex-col gap-2 font-mono text-[10px] uppercase tracking-wider">
-                        <button onClick={() => setShippingOption("standard")} className={`flex justify-between p-3.5 border transition-all cursor-pointer rounded-none text-left ${shippingOption === "standard"
+                        <button type="button" onClick={selectStandardShipping} className={`flex justify-between p-3.5 border transition-all cursor-pointer rounded-none text-left ${shippingOption === "standard"
                     ? "border-foreground text-foreground bg-foreground/[0.02]"
                     : "border-foreground/10 text-muted-foreground hover:border-foreground/30 bg-transparent"}`}>
                           <span>STANDARD / 3-5 DAYS</span>
@@ -307,7 +326,7 @@ export default function CartPage() {
                           </span>
                         </button>
 
-                        <button onClick={() => setShippingOption("express")} className={`flex justify-between p-3.5 border transition-all cursor-pointer rounded-none text-left ${shippingOption === "express"
+                        <button type="button" onClick={selectExpressShipping} className={`flex justify-between p-3.5 border transition-all cursor-pointer rounded-none text-left ${shippingOption === "express"
                     ? "border-foreground text-foreground bg-foreground/[0.02]"
                     : "border-foreground/10 text-muted-foreground hover:border-foreground/30 bg-transparent"}`}>
                           <span>EXPRESS / NEXT DAY</span>
@@ -326,15 +345,11 @@ export default function CartPage() {
                           <span className="font-mono text-[10px] text-emerald-600 dark:text-emerald-400 uppercase tracking-widest font-semibold">
                             {appliedPromo}
                           </span>
-                          <button onClick={() => {
-                        setDiscountPercent(0);
-                        setAppliedPromo(null);
-                        toast.info("Promo code removed");
-                    }} className="font-mono text-[9px] text-emerald-600 dark:text-emerald-400 uppercase tracking-widest font-bold cursor-pointer hover:underline">
+                          <button type="button" onClick={handleRemovePromo} className="font-mono text-[9px] text-emerald-600 dark:text-emerald-400 uppercase tracking-widest font-bold cursor-pointer hover:underline">
                             [REMOVE]
                           </button>
                         </div>) : (<form onSubmit={handleApplyPromo} className="flex gap-2">
-                          <input type="text" placeholder="PROMO CODE (AURA20)" value={promoCode} onChange={(e) => setPromoCode(e.target.value)} className="flex-1 bg-transparent border-b border-foreground/20 focus:border-foreground/70 py-2.5 font-mono text-[10px] tracking-widest uppercase placeholder:text-muted-foreground/30 outline-hidden transition-colors rounded-none"/>
+                          <input type="text" placeholder="PROMO CODE (AURA20)" value={promoCode} onChange={handlePromoCodeChange} className="flex-1 bg-transparent border-b border-foreground/20 focus:border-foreground/70 py-2.5 font-mono text-[10px] tracking-widest uppercase placeholder:text-muted-foreground/30 outline-hidden transition-colors rounded-none"/>
                           <button type="submit" className="px-4 py-2.5 border border-foreground/20 hover:border-foreground hover:bg-foreground/[0.02] rounded-none font-mono text-[10px] uppercase tracking-widest font-semibold cursor-pointer transition-all text-foreground">
                             APPLY
                           </button>
@@ -355,10 +370,10 @@ export default function CartPage() {
                   </div>
 
                 </div>)}
-            </motion.div>)}
+            </m.div>)}
 
           
-          {step === 2 && (<motion.div key="step-2" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} transition={{ duration: 0.2 }} className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+          {step === 2 && (<m.div key="step-2" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} transition={{ duration: 0.2 }} className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
               
               <div className="lg:col-span-6 flex flex-col text-left">
                 <h2 className="font-sans font-light text-2xl uppercase tracking-wider text-foreground mb-6">
@@ -367,39 +382,39 @@ export default function CartPage() {
 
                 <form onSubmit={proceedToPayment} className="flex flex-col gap-6">
                   <div className="flex flex-col gap-1.5">
-                    <label className="font-mono text-[9px] tracking-widest text-muted-foreground uppercase font-semibold">
+                    <label htmlFor="delivery-name" className="font-mono text-[9px] tracking-widest text-muted-foreground uppercase font-semibold">
                       Full Name *
                     </label>
-                    <input type="text" required placeholder="Cardholder or receiver name" value={deliveryForm.name} onChange={(e) => setDeliveryForm({ ...deliveryForm, name: e.target.value })} className="bg-transparent border-b border-foreground/20 focus:border-foreground/80 py-3 text-sm outline-hidden rounded-none w-full font-light"/>
+                    <input id="delivery-name" type="text" required placeholder="Cardholder or receiver name" value={deliveryForm.name} onChange={handleDeliveryNameChange} className="bg-transparent border-b border-foreground/20 focus:border-foreground/80 py-3 text-sm outline-hidden rounded-none w-full font-light"/>
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label className="font-mono text-[9px] tracking-widest text-muted-foreground uppercase font-semibold">
+                    <label htmlFor="delivery-email" className="font-mono text-[9px] tracking-widest text-muted-foreground uppercase font-semibold">
                       Email Address *
                     </label>
-                    <input type="email" required placeholder="receiver@gmail.com" value={deliveryForm.email} onChange={(e) => setDeliveryForm({ ...deliveryForm, email: e.target.value })} className="bg-transparent border-b border-foreground/20 focus:border-foreground/80 py-3 text-sm outline-hidden rounded-none w-full font-light"/>
+                    <input id="delivery-email" type="email" required placeholder="receiver@gmail.com" value={deliveryForm.email} onChange={handleDeliveryEmailChange} className="bg-transparent border-b border-foreground/20 focus:border-foreground/80 py-3 text-sm outline-hidden rounded-none w-full font-light"/>
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label className="font-mono text-[9px] tracking-widest text-muted-foreground uppercase font-semibold">
+                    <label htmlFor="delivery-address" className="font-mono text-[9px] tracking-widest text-muted-foreground uppercase font-semibold">
                       Shipping Address *
                     </label>
-                    <input type="text" required placeholder="123 Aura Ave, Suite A" value={deliveryForm.address} onChange={(e) => setDeliveryForm({ ...deliveryForm, address: e.target.value })} className="bg-transparent border-b border-foreground/20 focus:border-foreground/80 py-3 text-sm outline-hidden rounded-none w-full font-light"/>
+                    <input id="delivery-address" type="text" required placeholder="123 Aura Ave, Suite A" value={deliveryForm.address} onChange={handleDeliveryAddressChange} className="bg-transparent border-b border-foreground/20 focus:border-foreground/80 py-3 text-sm outline-hidden rounded-none w-full font-light"/>
                   </div>
 
                   <div className="grid grid-cols-2 gap-6">
                     <div className="flex flex-col gap-1.5">
-                      <label className="font-mono text-[9px] tracking-widest text-muted-foreground uppercase font-semibold">
+                      <label htmlFor="delivery-city" className="font-mono text-[9px] tracking-widest text-muted-foreground uppercase font-semibold">
                         City
                       </label>
-                      <input type="text" placeholder="Los Angeles" value={deliveryForm.city} onChange={(e) => setDeliveryForm({ ...deliveryForm, city: e.target.value })} className="bg-transparent border-b border-foreground/20 focus:border-foreground/80 py-3 text-sm outline-hidden rounded-none w-full font-light"/>
+                      <input id="delivery-city" type="text" placeholder="Los Angeles" value={deliveryForm.city} onChange={handleDeliveryCityChange} className="bg-transparent border-b border-foreground/20 focus:border-foreground/80 py-3 text-sm outline-hidden rounded-none w-full font-light"/>
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                      <label className="font-mono text-[9px] tracking-widest text-muted-foreground uppercase font-semibold">
+                      <label htmlFor="delivery-zip" className="font-mono text-[9px] tracking-widest text-muted-foreground uppercase font-semibold">
                         Zip Code
                       </label>
-                      <input type="text" placeholder="90001" value={deliveryForm.zip} onChange={(e) => setDeliveryForm({ ...deliveryForm, zip: e.target.value })} className="bg-transparent border-b border-foreground/20 focus:border-foreground/80 py-3 text-sm outline-hidden rounded-none w-full font-light"/>
+                      <input id="delivery-zip" type="text" placeholder="90001" value={deliveryForm.zip} onChange={handleDeliveryZipChange} className="bg-transparent border-b border-foreground/20 focus:border-foreground/80 py-3 text-sm outline-hidden rounded-none w-full font-light"/>
                     </div>
                   </div>
 
@@ -408,7 +423,7 @@ export default function CartPage() {
                       PROCEED TO PAYMENT
                     </button>
 
-                    <button type="button" onClick={() => setStep(1)} className="flex items-center justify-center gap-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors cursor-pointer bg-transparent border-none py-1">
+                    <button type="button" onClick={returnToBagFromDelivery} className="flex items-center justify-center gap-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors cursor-pointer bg-transparent border-none py-1">
                       Return to Bag selection
                     </button>
                   </div>
@@ -440,7 +455,7 @@ export default function CartPage() {
                     <path d="M 0,280 C 180,310 240,180 320,400" className="stroke-foreground/15"/>
 
                     
-                    {deliveryForm.address && (<motion.path d="M 200,200 L 280,120" fill="none" className="stroke-emerald-500 stroke-[1.8]" strokeDasharray="4, 4" initial={{ strokeDashoffset: 100 }} animate={{ strokeDashoffset: 0 }} transition={{ repeat: Infinity, ease: "linear", duration: 4 }}/>)}
+                    {deliveryForm.address && (<m.path d="M 200,200 L 280,120" fill="none" className="stroke-emerald-500 stroke-[1.8]" strokeDasharray="4, 4" initial={{ strokeDashoffset: 100 }} animate={{ strokeDashoffset: 0 }} transition={{ repeat: Infinity, ease: "linear", duration: 4 }}/>)}
 
                     
                     <g transform="translate(200, 200)">
@@ -481,10 +496,10 @@ export default function CartPage() {
 
                 </div>
               </div>
-            </motion.div>)}
+            </m.div>)}
 
           
-          {step === 3 && (<motion.div key="step-3" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} transition={{ duration: 0.2 }} className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+          {step === 3 && (<m.div key="step-3" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} transition={{ duration: 0.2 }} className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
               
               <div className="lg:col-span-6 flex flex-col text-left">
                 <h2 className="font-sans font-light text-2xl uppercase tracking-wider text-foreground mb-6">
@@ -493,44 +508,44 @@ export default function CartPage() {
 
                 <form onSubmit={handleFinalPayment} className="flex flex-col gap-6">
                   <div className="flex flex-col gap-1.5">
-                    <label className="font-mono text-[9px] tracking-widest text-muted-foreground uppercase font-semibold">
+                    <label htmlFor="payment-cardholder" className="font-mono text-[9px] tracking-widest text-muted-foreground uppercase font-semibold">
                       Cardholder Name *
                     </label>
-                    <input type="text" required placeholder="Name as it appears on credit card" value={paymentForm.cardholder} onFocus={() => setIsFlipped(false)} onChange={(e) => setPaymentForm({ ...paymentForm, cardholder: e.target.value.toUpperCase() })} className="bg-transparent border-b border-foreground/20 focus:border-foreground/80 py-3 text-sm outline-hidden rounded-none w-full font-light uppercase"/>
+                    <input id="payment-cardholder" type="text" required placeholder="Name as it appears on credit card" value={paymentForm.cardholder} onFocus={handleCardholderFocus} onChange={handlePaymentCardholderChange} className="bg-transparent border-b border-foreground/20 focus:border-foreground/80 py-3 text-sm outline-hidden rounded-none w-full font-light uppercase"/>
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label className="font-mono text-[9px] tracking-widest text-muted-foreground uppercase font-semibold">
+                    <label htmlFor="payment-number" className="font-mono text-[9px] tracking-widest text-muted-foreground uppercase font-semibold">
                       Card Number *
                     </label>
-                    <input type="text" required placeholder="0000 0000 0000 0000" maxLength={19} value={paymentForm.number} onFocus={() => setIsFlipped(false)} onChange={(e) => setPaymentForm({ ...paymentForm, number: formatCardNumber(e.target.value) })} className="bg-transparent border-b border-foreground/20 focus:border-foreground/80 py-3 text-sm outline-hidden rounded-none w-full font-light font-mono"/>
+                    <input id="payment-number" type="text" required placeholder="0000 0000 0000 0000" maxLength={19} value={paymentForm.number} onFocus={handleCardholderFocus} onChange={handlePaymentNumberChange} className="bg-transparent border-b border-foreground/20 focus:border-foreground/80 py-3 text-sm outline-hidden rounded-none w-full font-light font-mono"/>
                   </div>
 
                   <div className="grid grid-cols-2 gap-6">
                     <div className="flex flex-col gap-1.5">
-                      <label className="font-mono text-[9px] tracking-widest text-muted-foreground uppercase font-semibold">
+                      <label htmlFor="payment-expiry" className="font-mono text-[9px] tracking-widest text-muted-foreground uppercase font-semibold">
                         Expiration MM/YY
                       </label>
-                      <input type="text" placeholder="MM/YY" maxLength={5} value={paymentForm.expiry} onFocus={() => setIsFlipped(false)} onChange={(e) => setPaymentForm({ ...paymentForm, expiry: formatExpiry(e.target.value) })} className="bg-transparent border-b border-foreground/20 focus:border-foreground/80 py-3 text-sm outline-hidden rounded-none w-full font-light font-mono"/>
+                      <input id="payment-expiry" type="text" placeholder="MM/YY" maxLength={5} value={paymentForm.expiry} onFocus={handleCardholderFocus} onChange={handlePaymentExpiryChange} className="bg-transparent border-b border-foreground/20 focus:border-foreground/80 py-3 text-sm outline-hidden rounded-none w-full font-light font-mono"/>
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                      <label className="font-mono text-[9px] tracking-widest text-muted-foreground uppercase font-semibold">
+                      <label htmlFor="payment-cvc" className="font-mono text-[9px] tracking-widest text-muted-foreground uppercase font-semibold">
                         Security CVC *
                       </label>
-                      <input type="password" required placeholder="000" maxLength={3} value={paymentForm.cvc} onFocus={() => setIsFlipped(true)} onBlur={() => setIsFlipped(false)} onChange={(e) => setPaymentForm({ ...paymentForm, cvc: e.target.value.replace(/[^0-9]/g, "") })} className="bg-transparent border-b border-foreground/20 focus:border-foreground/80 py-3 text-sm outline-hidden rounded-none w-full font-light font-mono"/>
+                      <input id="payment-cvc" type="password" required placeholder="000" maxLength={3} value={paymentForm.cvc} onFocus={handleCvcFieldFocus} onBlur={handleCvcFieldBlur} onChange={handlePaymentCvcChange} className="bg-transparent border-b border-foreground/20 focus:border-foreground/80 py-3 text-sm outline-hidden rounded-none w-full font-light font-mono"/>
                     </div>
                   </div>
 
                   <div className="flex flex-col gap-4 mt-6">
                     <button type="submit" disabled={isProcessingPayment} className="w-full bg-foreground text-background font-mono text-xs uppercase tracking-[0.25em] py-5 font-semibold hover:bg-foreground/90 transition-colors disabled:opacity-50 cursor-pointer rounded-none flex items-center justify-center gap-2">
                       {isProcessingPayment ? (<>
-                          <span className="w-3.5 h-3.5 border-2 border-background border-t-transparent rounded-full animate-spin"/>
-                          <span>PROCESSING PAYMENT...</span>
+                          <span className="size-3.5 border-2 border-background border-t-transparent rounded-full animate-spin"/>
+                          <span>PROCESSING PAYMENT…</span>
                         </>) : (<span>COMPLETE ORDER</span>)}
                     </button>
 
-                    <button type="button" onClick={() => setStep(2)} className="flex items-center justify-center gap-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors cursor-pointer bg-transparent border-none py-1">
+                    <button type="button" onClick={returnToDeliveryFromPayment} className="flex items-center justify-center gap-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors cursor-pointer bg-transparent border-none py-1">
                       Return to delivery information
                     </button>
                   </div>
@@ -544,8 +559,8 @@ export default function CartPage() {
                 </span>
 
                 
-                <div onClick={() => setIsFlipped(!isFlipped)} className="w-full max-w-[360px] aspect-[1.586/1] cursor-pointer" style={{ perspective: "1000px" }}>
-                  <motion.div animate={{ rotateY: isFlipped ? 180 : 0 }} transition={{ type: "spring", stiffness: 220, damping: 26 }} className="w-full h-full relative" style={{ transformStyle: "preserve-3d" }}>
+                <div role="button" tabIndex={0} onClick={togglePaymentCardFlip} onKeyDown={handlePaymentCardVisualizerKeyDown} className="w-full max-w-[360px] aspect-[1.586/1] cursor-pointer outline-offset-2 rounded-2xl" style={{ perspective: "1000px" }}>
+                  <m.div animate={{ rotateY: isFlipped ? 180 : 0 }} transition={{ type: "spring", stiffness: 220, damping: 26 }} className="w-full h-full relative" style={{ transformStyle: "preserve-3d" }}>
                     
                     
                     <div className="absolute inset-0 w-full h-full rounded-2xl p-6 text-white flex flex-col justify-between overflow-hidden shadow-2xl border border-white/20" style={{
@@ -554,7 +569,7 @@ export default function CartPage() {
             }}>
                       
                       <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.04] to-transparent rotate-12 -translate-y-1/2 scale-150 pointer-events-none animate-pulse"/>
-                      <div className="absolute top-0 right-0 w-44 h-44 bg-white/[0.02] rounded-full blur-2xl pointer-events-none"/>
+                      <div className="absolute top-0 right-0 size-44 bg-white/[0.02] rounded-full blur-2xl pointer-events-none"/>
                       
                       
                       <div className="flex justify-between items-start">
@@ -599,9 +614,9 @@ export default function CartPage() {
                           </div>
 
                           
-                          <div className="flex -space-x-2.5 opacity-90 shrink-0 mb-0.5">
-                            <div className="w-5.5 h-5.5 rounded-full border border-[#D5A03A] bg-[#D5A03A]/20"/>
-                            <div className="w-5.5 h-5.5 rounded-full border border-[#E9B646] bg-[#E9B646]/30"/>
+                          <div className="flex gap-x-2.5 opacity-90 shrink-0 mb-0.5">
+                            <div className="size-5.5 rounded-full border border-[#D5A03A] bg-[#D5A03A]/20"/>
+                            <div className="size-5.5 rounded-full border border-[#E9B646] bg-[#E9B646]/30"/>
                           </div>
                         </div>
                       </div>
@@ -643,7 +658,7 @@ export default function CartPage() {
 
                     </div>
 
-                  </motion.div>
+                  </m.div>
                 </div>
 
                 <p className="font-mono text-[9px] tracking-widest text-muted-foreground/60 uppercase">
@@ -651,12 +666,12 @@ export default function CartPage() {
                 </p>
               </div>
 
-            </motion.div>)}
+            </m.div>)}
 
           
-          {step === 4 && (<motion.div key="step-4" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: "spring", stiffness: 350, damping: 28 }} className="w-full max-w-[640px] mx-auto text-center py-16 flex flex-col items-center justify-center select-none">
-              <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-500 mb-6">
-                <IconCheck className="w-8 h-8 stroke-[2.5]"/>
+          {step === 4 && (<m.div key="step-4" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: "spring", stiffness: 350, damping: 28 }} className="w-full max-w-[640px] mx-auto text-center py-16 flex flex-col items-center justify-center select-none">
+              <div className="size-16 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-500 mb-6">
+                <IconCheck className="size-8 stroke-[2.5]"/>
               </div>
 
               <h1 className="font-sans font-light text-3xl uppercase tracking-wider text-foreground">
@@ -722,11 +737,11 @@ export default function CartPage() {
                 </div>
               </div>
 
-              <button onClick={() => startTransition(() => router.push("/"))} className="mt-10 bg-foreground text-background font-mono text-xs uppercase tracking-[0.25em] py-5 px-8 font-semibold hover:bg-foreground/90 transition-colors cursor-pointer rounded-none">
+              <button type="button" onClick={navigateHome} className="mt-10 bg-foreground text-background font-mono text-xs uppercase tracking-[0.25em] py-5 px-8 font-semibold hover:bg-foreground/90 transition-colors cursor-pointer rounded-none">
                 RETURN TO FLAGSHIPS
               </button>
 
-            </motion.div>)}
+            </m.div>)}
         </AnimatePresence>
 
       </div>
