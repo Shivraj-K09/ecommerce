@@ -1,46 +1,25 @@
 "use client";
-
 import React, { startTransition } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useStore } from "@/lib/store";
 import { formatInr } from "@/lib/money";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-} from "@/components/ui/sheet";
-import {
-  IconShoppingBag,
-  IconArrowRight,
-  IconTrash,
-} from "@tabler/icons-react";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, } from "@/components/ui/sheet";
+import { IconShoppingBag, IconArrowRight, IconTrash, } from "@tabler/icons-react";
 import { motion, AnimatePresence } from "motion/react";
-
 export function ShoppingCartDrawer() {
-  const router = useRouter();
-  const cart = useStore((state) => state.cart);
-  const isCartOpen = useStore((state) => state.isCartOpen);
-  const setCartOpen = useStore((state) => state.setCartOpen);
-  const removeFromCart = useStore((state) => state.removeFromCart);
-  const updateQuantity = useStore((state) => state.updateQuantity);
-  const clearCart = useStore((state) => state.clearCart);
-
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const cartSubtotal = cart.reduce(
-    (sum, item) => sum + item.product.price * item.quantity,
-    0,
-  );
-
-  return (
-    <Sheet open={isCartOpen} onOpenChange={setCartOpen}>
-      <SheetContent
-        side="right"
-        className="w-full sm:max-w-[450px] p-0 flex flex-col justify-between h-full bg-background/98 dark:bg-background/98 backdrop-blur-3xl border-l border-foreground/5 shadow-2xl z-[100]"
-      >
-        {/* ================= HEADER SECTION ================= */}
+    const router = useRouter();
+    const cart = useStore((state) => state.cart);
+    const isCartOpen = useStore((state) => state.isCartOpen);
+    const setCartOpen = useStore((state) => state.setCartOpen);
+    const removeFromCart = useStore((state) => state.removeFromCart);
+    const updateQuantity = useStore((state) => state.updateQuantity);
+    const clearCart = useStore((state) => state.clearCart);
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    const cartSubtotal = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+    return (<Sheet open={isCartOpen} onOpenChange={setCartOpen}>
+      <SheetContent side="right" className="w-full sm:max-w-[450px] p-0 flex flex-col justify-between h-full bg-background/98 dark:bg-background/98 backdrop-blur-3xl border-l border-foreground/5 shadow-2xl z-100">
+        
         <div className="flex flex-col h-full justify-between overflow-hidden">
           <div className="flex flex-col h-full overflow-hidden">
             <SheetHeader className="p-5 border-b border-foreground/5 bg-background/20">
@@ -57,18 +36,12 @@ export function ShoppingCartDrawer() {
               </SheetDescription>
             </SheetHeader>
 
-            {/* ================= ITEMS MONOGRAPH SCROLL ================= */}
+            
             <div className="flex-1 overflow-y-auto px-8 py-8 flex flex-col gap-8 custom-scrollbar">
               <AnimatePresence mode="popLayout">
-                {cart.length === 0 ? (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="py-32 flex flex-col items-center justify-center text-center"
-                  >
+                {cart.length === 0 ? (<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="py-32 flex flex-col items-center justify-center text-center">
                     <div className="w-10 h-10 rounded-full border border-foreground/5 flex items-center justify-center mb-6 bg-foreground/2">
-                      <IconShoppingBag className="w-4 h-4 text-muted-foreground/60 stroke-[1.5]" />
+                      <IconShoppingBag className="w-4 h-4 text-muted-foreground/60 stroke-[1.5]"/>
                     </div>
                     <p className="font-sans font-light text-[10px] tracking-[0.3em] text-foreground uppercase">
                       BAG IS EMPTY
@@ -76,29 +49,13 @@ export function ShoppingCartDrawer() {
                     <p className="text-[11px] text-muted-foreground mt-3 max-w-[200px] leading-relaxed font-light font-mono lowercase">
                       your shopping bag is currently empty.
                     </p>
-                  </motion.div>
-                ) : (
-                  cart.map((item, idx) => (
-                    <motion.div
-                      key={`cart-item-${item.product.id}-${item.selectedColor}-${idx}`}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.15 }}
-                      className="group flex gap-5 pb-6 border-b border-foreground/5 last:border-b-0 last:pb-0"
-                    >
-                      {/* Hyper-Minimal Aspect Ratio Frame */}
-                      <div className="w-16 aspect-[3/4] bg-muted overflow-hidden relative shrink-0 border border-foreground/5">
-                        <Image
-                          src={item.product.image}
-                          alt={item.product.name}
-                          fill
-                          className="object-cover transition-opacity duration-300"
-                          sizes="64px"
-                        />
+                  </motion.div>) : (cart.map((item, idx) => (<motion.div key={`cart-item-${item.product.id}-${item.selectedColor}-${idx}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.15 }} className="group flex gap-5 pb-6 border-b border-foreground/5 last:border-b-0 last:pb-0">
+                      
+                      <div className="w-16 aspect-3/4 bg-muted overflow-hidden relative shrink-0 border border-foreground/5">
+                        <Image src={item.product.image} alt={item.product.name} fill className="object-cover transition-opacity duration-300" sizes="64px"/>
                       </div>
 
-                      {/* Stark Editorial Product Details */}
+                      
                       <div className="flex-1 flex flex-col justify-between min-w-0 py-0.5">
                         <div className="flex flex-col gap-1">
                           <div className="flex justify-between items-start gap-4">
@@ -112,72 +69,41 @@ export function ShoppingCartDrawer() {
 
                           <div className="flex items-center gap-2 font-mono text-store-min tracking-widest text-muted-foreground/60 uppercase mt-0.5">
                             <span>{item.product.category}</span>
-                            {item.selectedColor && (
-                              <>
+                            {item.selectedColor && (<>
                                 <span>·</span>
                                 <span>{item.selectedColor}</span>
-                              </>
-                            )}
+                              </>)}
                           </div>
                         </div>
 
-                        {/* Inline Minimalist Controller & Delete Trigger */}
+                        
                         <div className="flex items-center justify-between mt-3">
-                          {/* Luxe Quantity Adjuster inline */}
+                          
                           <div className="flex items-center gap-2.5 font-mono text-[9px] tracking-wider text-muted-foreground select-none">
                             <span>QTY</span>
                             <div className="flex items-center gap-1.5 text-foreground">
-                              <button
-                                onClick={() =>
-                                  updateQuantity(
-                                    item.product.id,
-                                    item.quantity - 1,
-                                    item.selectedColor,
-                                  )
-                                }
-                                className="hover:text-muted-foreground/70 transition-colors px-1 cursor-pointer"
-                              >
+                              <button onClick={() => updateQuantity(item.product.id, item.quantity - 1, item.selectedColor)} className="hover:text-muted-foreground/70 transition-colors px-1 cursor-pointer">
                                 -
                               </button>
                               <span className="font-bold">{item.quantity}</span>
-                              <button
-                                onClick={() =>
-                                  updateQuantity(
-                                    item.product.id,
-                                    item.quantity + 1,
-                                    item.selectedColor,
-                                  )
-                                }
-                                className="hover:text-muted-foreground/70 transition-colors px-1 cursor-pointer"
-                              >
+                              <button onClick={() => updateQuantity(item.product.id, item.quantity + 1, item.selectedColor)} className="hover:text-muted-foreground/70 transition-colors px-1 cursor-pointer">
                                 +
                               </button>
                             </div>
                           </div>
 
-                          {/* Minimal Remove Trigger */}
-                          <button
-                            onClick={() =>
-                              removeFromCart(
-                                item.product.id,
-                                item.selectedColor,
-                              )
-                            }
-                            className="text-muted-foreground/40 hover:text-destructive transition-colors cursor-pointer py-1 flex items-center justify-center"
-                            aria-label="Remove item"
-                          >
-                            <IconTrash className="w-3.5 h-3.5 stroke-[1.5]" />
+                          
+                          <button onClick={() => removeFromCart(item.product.id, item.selectedColor)} className="text-muted-foreground/40 hover:text-destructive transition-colors cursor-pointer py-1 flex items-center justify-center" aria-label="Remove item">
+                            <IconTrash className="w-3.5 h-3.5 stroke-[1.5]"/>
                           </button>
                         </div>
                       </div>
-                    </motion.div>
-                  ))
-                )}
+                    </motion.div>)))}
               </AnimatePresence>
             </div>
           </div>
 
-          {/* ================= TRANSPARENT MONOGRAPH FOOTER ================= */}
+          
           <div className="px-8 py-8 border-t border-foreground/5 bg-background/10">
             <div className="flex flex-col gap-4 font-mono text-[9px] uppercase text-muted-foreground tracking-widest mb-6">
               <div className="flex justify-between">
@@ -192,39 +118,32 @@ export function ShoppingCartDrawer() {
                 <span className="font-medium tracking-[0.25em]">
                   TOTAL AMOUNT
                 </span>
-                <span className="font-normal text-xs">{formatInr(cartSubtotal)}</span>
+                <span className="font-normal text-xs">
+                  {formatInr(cartSubtotal)}
+                </span>
               </div>
             </div>
 
-            {/* Solid High-Contrast Block Actions */}
+            
             <div className="flex flex-col gap-3">
-              <button
-                onClick={() => {
-                  if (cart.length === 0) return;
-                  setCartOpen(false);
-                  startTransition(() => {
-                    router.push("/cart");
-                  });
-                }}
-                disabled={cart.length === 0}
-                className="w-full bg-foreground text-background hover:bg-foreground/90 disabled:opacity-30 disabled:cursor-not-allowed font-mono text-[10px] uppercase tracking-[0.3em] py-5 h-12 rounded-none transition-all duration-300 transform active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer shadow-md"
-              >
+              <button onClick={() => {
+            if (cart.length === 0)
+                return;
+            setCartOpen(false);
+            startTransition(() => {
+                router.push("/cart");
+            });
+        }} disabled={cart.length === 0} className="w-full bg-foreground text-background hover:bg-foreground/90 disabled:opacity-30 disabled:cursor-not-allowed font-mono text-[10px] uppercase tracking-[0.3em] py-5 h-12 rounded-none transition-all duration-300 transform active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer shadow-md">
                 PROCEED TO CHECKOUT
-                <IconArrowRight className="w-3 h-3 stroke-[1.5]" />
+                <IconArrowRight className="w-3 h-3 stroke-[1.5]"/>
               </button>
 
-              {cart.length > 0 && (
-                <button
-                  onClick={clearCart}
-                  className="font-mono text-store-min tracking-[0.25em] text-muted-foreground/50 hover:text-destructive/80 transition-colors uppercase py-2 text-center underline-offset-4 hover:underline cursor-pointer"
-                >
+              {cart.length > 0 && (<button onClick={clearCart} className="font-mono text-store-min tracking-[0.25em] text-muted-foreground/50 hover:text-destructive/80 transition-colors uppercase py-2 text-center underline-offset-4 hover:underline cursor-pointer">
                   EMPTY SHOPPING BAG
-                </button>
-              )}
+                </button>)}
             </div>
           </div>
         </div>
       </SheetContent>
-    </Sheet>
-  );
+    </Sheet>);
 }
