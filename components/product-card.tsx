@@ -132,8 +132,7 @@ export function ProductCard({
           <button
             type="button"
             onClick={handleViewDirect}
-            aria-label={`View ${product.name}`}
-            className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-sm border-[0.5px] border-white/20 bg-white/10 py-2 font-mono text-[8.5px] tracking-[0.2em] text-white uppercase shadow-sm transition-all duration-300 hover:bg-white hover:text-black active:scale-[0.99]"
+            className="flex min-h-11 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-sm border-[0.5px] border-white/20 bg-white/10 px-2 py-2 font-mono text-[8.5px] tracking-[0.2em] text-white uppercase shadow-sm transition-all duration-300 hover:bg-white hover:text-black active:scale-[0.99]"
           >
             VIEW
             <IconEye className="size-3 stroke-[1.2]" aria-hidden="true" />
@@ -142,8 +141,7 @@ export function ProductCard({
           <button
             type="button"
             onClick={handleAddDirect}
-            aria-label={`Add ${product.name} to bag`}
-            className="flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-sm border-[0.5px] border-white/20 bg-transparent py-2 font-mono text-[8.5px] tracking-[0.2em] text-white uppercase shadow-sm transition-all duration-300 hover:border-white hover:bg-white hover:text-black active:scale-[0.99]"
+            className="flex min-h-11 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-sm border-[0.5px] border-white/20 bg-transparent px-2 py-2 font-mono text-[8.5px] tracking-[0.2em] text-white uppercase shadow-sm transition-all duration-300 hover:border-white hover:bg-white hover:text-black active:scale-[0.99]"
           >
             BUY
             <IconShoppingBag

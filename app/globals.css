@@ -194,3 +194,8 @@ body,
     animation-delay: 0s !important;
   }
 }
+
+.home-product-rails {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 2400px;
+}

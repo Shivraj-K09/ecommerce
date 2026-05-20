@@ -38,7 +38,8 @@ export function AmbientVisualizer({
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-    let animationId: number;
+    let animationId = 0;
+    let isRunning = true;
     const dprInit = window.devicePixelRatio;
     canvas.width = canvas.offsetWidth * dprInit;
     canvas.height = canvas.offsetHeight * dprInit;
@@ -101,10 +102,17 @@ export function AmbientVisualizer({
 
     let frame = 0;
     const draw = () => {
+      if (!isRunning) return;
+
+      if (document.hidden) {
+        animationId = window.requestAnimationFrame(draw);
+        return;
+      }
+
       const width = canvas.offsetWidth;
       const height = canvas.offsetHeight;
       if (width === 0 || height === 0) {
-        animationId = requestAnimationFrame(draw);
+        animationId = window.requestAnimationFrame(draw);
         return;
       }
       ctx.clearRect(0, 0, width, height);
@@ -123,15 +131,24 @@ export function AmbientVisualizer({
         state,
         mouse,
       });
-      animationId = requestAnimationFrame(draw);
+      animationId = window.requestAnimationFrame(draw);
     };
 
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
     draw();
 
     return () => {
-      cancelAnimationFrame(animationId);
+      isRunning = false;
+      window.cancelAnimationFrame(animationId);
       window.removeEventListener("resize", handleResize);
       parent?.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [type, isHovered, theme]);
 

@@ -104,6 +104,7 @@ export function CategoryPageClient({
           fill
           priority
           loading="eager"
+          fetchPriority="high"
           className="pointer-events-none object-cover select-none"
           sizes="100vw"
           style={{

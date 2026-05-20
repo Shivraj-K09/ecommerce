@@ -8,5 +8,15 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
-  return <HomePage />;
+  return (
+    <>
+      <link
+        rel="preload"
+        as="image"
+        href="/products/headphones.webp"
+        fetchPriority="high"
+      />
+      <HomePage />
+    </>
+  );
 }

@@ -83,7 +83,7 @@ export function Footer({ width = "default" }: { width?: FooterWidth }) {
               <button
                 type="button"
                 onClick={goHome}
-                className="text-foreground w-fit cursor-pointer border-0 bg-transparent p-0 text-left font-sans text-lg font-semibold tracking-[0.25em] uppercase transition-opacity hover:opacity-80"
+                className="text-foreground inline-flex min-h-11 min-w-11 cursor-pointer items-center border-0 bg-transparent p-0 text-left font-sans text-lg font-semibold tracking-[0.25em] uppercase transition-opacity hover:opacity-80"
               >
                 AURA
               </button>
@@ -112,7 +112,7 @@ export function Footer({ width = "default" }: { width?: FooterWidth }) {
                   required
                   autoComplete="email"
                   placeholder="Enter email address"
-                  className="placeholder:text-muted-foreground/35 border-foreground/10 focus-visible:ring-foreground/20 h-10 rounded-md font-mono text-[10px] tracking-wider uppercase"
+                  className="placeholder:text-muted-foreground/70 border-foreground/10 focus-visible:ring-foreground/20 h-10 rounded-md font-mono text-[10px] tracking-wider uppercase"
                 />
                 <Button
                   type="submit"
@@ -122,7 +122,7 @@ export function Footer({ width = "default" }: { width?: FooterWidth }) {
                   JOIN
                 </Button>
               </form>
-              <p className="text-muted-foreground/50 font-mono text-[8.5px] tracking-wider uppercase">
+              <p className="text-muted-foreground font-mono text-[9px] tracking-wider uppercase">
                 Get priority releases, material schedules, and early briefings.
               </p>
             </div>
@@ -132,12 +132,12 @@ export function Footer({ width = "default" }: { width?: FooterWidth }) {
             <span className="text-foreground font-mono text-[9px] font-bold tracking-widest uppercase">
               SPECTRUMS
             </span>
-            <ul className="text-muted-foreground flex flex-col gap-2.5 font-sans text-xs font-light uppercase">
+            <ul className="text-muted-foreground flex flex-col gap-1 font-sans text-xs font-light uppercase">
               <li>
                 <button
                   type="button"
                   onClick={goHome}
-                  className="hover:text-foreground cursor-pointer border-none bg-transparent p-0 text-left transition-colors hover:underline"
+                  className="hover:text-foreground inline-flex min-h-11 cursor-pointer items-center border-none bg-transparent px-1 py-2 text-left transition-colors hover:underline"
                 >
                   Shop All
                 </button>
@@ -146,7 +146,7 @@ export function Footer({ width = "default" }: { width?: FooterWidth }) {
                 <button
                   type="button"
                   onClick={goElectronics}
-                  className="hover:text-foreground cursor-pointer border-none bg-transparent p-0 text-left transition-colors hover:underline"
+                  className="hover:text-foreground inline-flex min-h-11 cursor-pointer items-center border-none bg-transparent px-1 py-2 text-left transition-colors hover:underline"
                 >
                   Audio
                 </button>
@@ -155,7 +155,7 @@ export function Footer({ width = "default" }: { width?: FooterWidth }) {
                 <button
                   type="button"
                   onClick={goLiving}
-                  className="hover:text-foreground cursor-pointer border-none bg-transparent p-0 text-left transition-colors hover:underline"
+                  className="hover:text-foreground inline-flex min-h-11 cursor-pointer items-center border-none bg-transparent px-1 py-2 text-left transition-colors hover:underline"
                 >
                   Living
                 </button>
@@ -164,7 +164,7 @@ export function Footer({ width = "default" }: { width?: FooterWidth }) {
                 <button
                   type="button"
                   onClick={goWriting}
-                  className="hover:text-foreground cursor-pointer border-none bg-transparent p-0 text-left transition-colors hover:underline"
+                  className="hover:text-foreground inline-flex min-h-11 cursor-pointer items-center border-none bg-transparent px-1 py-2 text-left transition-colors hover:underline"
                 >
                   Tactile
                 </button>
@@ -173,7 +173,7 @@ export function Footer({ width = "default" }: { width?: FooterWidth }) {
                 <button
                   type="button"
                   onClick={goWellness}
-                  className="hover:text-foreground cursor-pointer border-none bg-transparent p-0 text-left transition-colors hover:underline"
+                  className="hover:text-foreground inline-flex min-h-11 cursor-pointer items-center border-none bg-transparent px-1 py-2 text-left transition-colors hover:underline"
                 >
                   Wellness
                 </button>
@@ -315,18 +315,24 @@ export function Footer({ width = "default" }: { width?: FooterWidth }) {
 
         <Separator className="bg-border/60" />
 
-        <div className="text-muted-foreground/60 flex flex-col items-center gap-6 text-center font-mono text-[9px] tracking-[0.18em] uppercase md:flex-row md:items-center md:justify-between md:gap-4 md:text-left">
+        <div className="text-muted-foreground flex flex-col items-center gap-6 text-center font-mono text-[9px] tracking-[0.18em] uppercase md:flex-row md:items-center md:justify-between md:gap-4 md:text-left">
           <span className="max-w-[min(100%,28rem)] leading-relaxed">
             © 2026 AURA ARCHIVES INC. ALL RIGHTS RESERVED.
           </span>
           <div className="flex w-full flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-4 sm:gap-y-2 md:w-auto md:justify-end">
-            <span className="hover:text-foreground cursor-pointer transition-colors">
+            <button
+              type="button"
+              className="text-muted-foreground hover:text-foreground inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center border-0 bg-transparent px-3 transition-colors"
+            >
               Privacy Policy
-            </span>
+            </button>
 
-            <span className="hover:text-foreground cursor-pointer transition-colors">
+            <button
+              type="button"
+              className="text-muted-foreground hover:text-foreground inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center border-0 bg-transparent px-3 transition-colors"
+            >
               Terms of Service
-            </span>
+            </button>
           </div>
         </div>
       </div>

@@ -1,22 +1,30 @@
 "use client";
 import React, { useState, startTransition } from "react";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { PRODUCTS, Product } from "@/lib/data";
 import { FlagshipCard } from "@/components/flagship-card";
-import { ShoppingCartDrawer } from "@/components/shopping-cart-drawer";
-import { ProductCard } from "@/components/product-card";
 import { useStore } from "@/lib/store";
 import { toast } from "sonner";
-import {
-  IconArrowUpRight,
-  IconCpu,
-  IconHome,
-  IconPencil,
-  IconActivity,
-} from "@tabler/icons-react";
+import { useIdleMount } from "@/hooks/use-idle-mount";
+
+const ShoppingCartDrawer = dynamic(
+  () =>
+    import("@/components/shopping-cart-drawer").then(
+      (module) => module.ShoppingCartDrawer,
+    ),
+  { ssr: false },
+);
+
+const HomeProductRails = dynamic(
+  () =>
+    import("./home-product-rails").then((module) => module.HomeProductRails),
+  { ssr: false },
+);
 export function HomePage() {
   const { push } = useRouter();
   const addToCart = useStore((state) => state.addToCart);
+  const showProductRails = useIdleMount();
   const [hoveredPanel, setHoveredPanel] = useState<number | null>(null);
   const [flagshipIds] = useState<string[]>([
     "headphones",
@@ -89,146 +97,29 @@ export function HomePage() {
         ))}
       </section>
 
-      <section className="relative z-20 flex w-full flex-col gap-28 px-6 py-24 md:px-12">
-        <div className="flex flex-col gap-8">
-          <div className="flex items-end justify-between border-b border-zinc-200 pb-5 dark:border-zinc-800/80">
-            <div className="flex flex-col gap-2 text-left">
-              <div className="flex items-center gap-2">
-                <IconCpu className="size-4 text-zinc-400 dark:text-zinc-600" />
-                <span className="font-mono text-[9px] font-bold tracking-[0.25em] text-zinc-400 uppercase dark:text-zinc-500">
-                  [ SPECTRUM 01 / ACOUSTICS & CYBERNETICS ]
-                </span>
-              </div>
-              <h2 className="font-sans text-xl font-medium tracking-wider uppercase md:text-2xl">
-                Audio & Tech
-              </h2>
-            </div>
-            <button
-              type="button"
-              onClick={exploreElectronics}
-              className="text-muted-foreground hover:text-foreground flex cursor-pointer items-center gap-1.5 font-mono text-[9.5px] tracking-widest uppercase transition-colors"
-            >
-              EXPLORE INDEX <IconArrowUpRight className="size-3.5" />
-            </button>
+      <section
+        className="home-product-rails relative z-20 flex w-full flex-col gap-28 px-6 py-24 md:px-12"
+        aria-label="Product collections"
+      >
+        {showProductRails ? (
+          <HomeProductRails
+            audioProducts={audioProducts}
+            livingProducts={livingProducts}
+            writingProducts={writingProducts}
+            wellnessProducts={wellnessProducts}
+            onExploreElectronics={exploreElectronics}
+            onExploreLiving={exploreLiving}
+            onExploreWriting={exploreWriting}
+            onExploreWellness={exploreWellness}
+          />
+        ) : (
+          <div
+            className="text-muted-foreground py-8 text-center font-mono text-[10px] tracking-[0.2em] uppercase"
+            aria-hidden="true"
+          >
+            Loading collections
           </div>
-
-          <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 md:grid-cols-3 lg:grid-cols-6">
-            {audioProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                categoryId="electronics"
-                disableTransitionNames={true}
-                className="mx-auto w-full max-w-[420px]"
-              />
-            ))}
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-8">
-          <div className="flex items-end justify-between border-b border-zinc-200 pb-5 dark:border-zinc-800/80">
-            <div className="flex flex-col gap-2 text-left">
-              <div className="flex items-center gap-2">
-                <IconHome className="size-4 text-zinc-400 dark:text-zinc-600" />
-                <span className="font-mono text-[9px] font-bold tracking-[0.25em] text-zinc-400 uppercase dark:text-zinc-500">
-                  [ SPECTRUM 02 / ORGANIC SPATIAL ALIGNMENT ]
-                </span>
-              </div>
-              <h2 className="font-sans text-xl font-medium tracking-wider uppercase md:text-2xl">
-                Home & Living
-              </h2>
-            </div>
-            <button
-              type="button"
-              onClick={exploreLiving}
-              className="text-muted-foreground hover:text-foreground flex cursor-pointer items-center gap-1.5 font-mono text-[9.5px] tracking-widest uppercase transition-colors"
-            >
-              EXPLORE INDEX <IconArrowUpRight className="size-3.5" />
-            </button>
-          </div>
-
-          <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 md:grid-cols-3 lg:grid-cols-6">
-            {livingProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                categoryId="living"
-                disableTransitionNames={true}
-                className="mx-auto w-full max-w-[420px]"
-              />
-            ))}
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-8">
-          <div className="flex items-end justify-between border-b border-zinc-200 pb-5 dark:border-zinc-800/80">
-            <div className="flex flex-col gap-2 text-left">
-              <div className="flex items-center gap-2">
-                <IconPencil className="size-4 text-zinc-400 dark:text-zinc-600" />
-                <span className="font-mono text-[9px] font-bold tracking-[0.25em] text-zinc-400 uppercase dark:text-zinc-500">
-                  [ SPECTRUM 03 / TACTILE INSTRUMENTS & DRAFTS ]
-                </span>
-              </div>
-              <h2 className="font-sans text-xl font-medium tracking-wider uppercase md:text-2xl">
-                Tactile Writing
-              </h2>
-            </div>
-            <button
-              type="button"
-              onClick={exploreWriting}
-              className="text-muted-foreground hover:text-foreground flex cursor-pointer items-center gap-1.5 font-mono text-[9.5px] tracking-widest uppercase transition-colors"
-            >
-              EXPLORE INDEX <IconArrowUpRight className="size-3.5" />
-            </button>
-          </div>
-
-          <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 md:grid-cols-3 lg:grid-cols-6">
-            {writingProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                categoryId="writing"
-                disableTransitionNames={true}
-                className="mx-auto w-full max-w-[420px]"
-              />
-            ))}
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-8">
-          <div className="flex items-end justify-between border-b border-zinc-200 pb-5 dark:border-zinc-800/80">
-            <div className="flex flex-col gap-2 text-left">
-              <div className="flex items-center gap-2">
-                <IconActivity className="size-4 text-zinc-400 dark:text-zinc-600" />
-                <span className="font-mono text-[9px] font-bold tracking-[0.25em] text-zinc-400 uppercase dark:text-zinc-500">
-                  [ SPECTRUM 04 / SENSORY CALM & BOTANICAL AURA ]
-                </span>
-              </div>
-              <h2 className="font-sans text-xl font-medium tracking-wider uppercase md:text-2xl">
-                Wellness & Aroma
-              </h2>
-            </div>
-            <button
-              type="button"
-              onClick={exploreWellness}
-              className="text-muted-foreground hover:text-foreground flex cursor-pointer items-center gap-1.5 font-mono text-[9.5px] tracking-widest uppercase transition-colors"
-            >
-              EXPLORE INDEX <IconArrowUpRight className="size-3.5" />
-            </button>
-          </div>
-
-          <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 md:grid-cols-3 lg:grid-cols-6">
-            {wellnessProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                categoryId="wellness"
-                disableTransitionNames={true}
-                className="mx-auto w-full max-w-[420px]"
-              />
-            ))}
-          </div>
-        </div>
+        )}
       </section>
 
       <ShoppingCartDrawer />

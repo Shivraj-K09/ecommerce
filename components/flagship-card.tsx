@@ -1,14 +1,26 @@
+"use client";
+
 import React, { startTransition, ViewTransition, useState } from "react";
+import dynamic from "next/dynamic";
 import { AnimatePresence } from "motion/react";
 import * as m from "motion/react-m";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { Product } from "@/lib/data";
 import { formatInr } from "@/lib/money";
-import { AmbientVisualizer } from "@/components/ambient-visualizer";
+import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 import { Button } from "@/components/ui/button";
 import { IconShoppingBag, IconEye } from "@tabler/icons-react";
 import Image from "next/image";
+import { cn } from "@/lib/utils";
+
+const AmbientVisualizer = dynamic(
+  () =>
+    import("@/components/ambient-visualizer").then(
+      (module) => module.AmbientVisualizer,
+    ),
+  { ssr: false },
+);
 interface FlagshipCardProps {
   product: Product;
   idx: number;
@@ -50,8 +62,10 @@ export function FlagshipCard({
     return () => clearTimeout(timer);
   }, []);
   const activeTheme = mounted ? theme : "dark";
+  const prefersReducedMotion = usePrefersReducedMotion();
   const isHovered = hoveredPanel === idx;
   const isAnyHovered = hoveredPanel !== null;
+  const showAmbientVisualizer = isHovered && !prefersReducedMotion;
 
   function handlePanelEnter() {
     setHoveredPanel(idx);
@@ -89,7 +103,7 @@ export function FlagshipCard({
   }
 
   return (
-    <m.div
+    <div
       onMouseEnter={handlePanelEnter}
       onMouseLeave={handlePanelLeave}
       onClick={handlePanelNavigate}
@@ -97,22 +111,23 @@ export function FlagshipCard({
       tabIndex={0}
       role="group"
       aria-label={`${product.name}, ${formatInr(product.price)}`}
-      className="border-border group bg-card hover:bg-muted/10 focus-visible:ring-ring/50 relative flex min-w-0 flex-1 basis-0 cursor-pointer flex-col justify-between overflow-hidden border-b p-8 transition-all duration-500 last:border-r-0 focus-visible:ring-3 focus-visible:outline-none md:border-r md:border-b-0"
-      animate={{
-        flexGrow: isHovered ? 1.45 : isAnyHovered ? 0.85 : 1,
-        flexShrink: 1,
-      }}
-      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+      className={cn(
+        "border-border group bg-card hover:bg-muted/10 focus-visible:ring-ring/50 relative flex min-w-0 basis-0 cursor-pointer flex-col justify-between overflow-hidden border-b p-8 transition-[flex-grow] duration-[350ms] ease-[cubic-bezier(0.16,1,0.3,1)] last:border-r-0 focus-visible:ring-3 focus-visible:outline-none md:border-r md:border-b-0",
+        prefersReducedMotion || !isAnyHovered
+          ? "flex-1"
+          : isHovered
+            ? "flex-[1.45_1_0%]"
+            : "flex-[0.85_1_0%]",
+      )}
     >
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden transition-all duration-700 select-none">
         <div className="from-background/90 via-background/15 to-background/95 pointer-events-none absolute inset-0 z-10 bg-linear-to-b" />
 
-        <m.div
-          className="relative h-full w-full"
-          animate={{
-            scale: isHovered ? 1.03 : 1,
-          }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        <div
+          className={cn(
+            "relative h-full w-full transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]",
+            isHovered && !prefersReducedMotion && "scale-[1.03]",
+          )}
         >
           <SafeTransition
             name={isTransitioning ? `product-image-${product.id}` : undefined}
@@ -123,7 +138,8 @@ export function FlagshipCard({
                 alt={product.name}
                 fill
                 priority={idx === 0}
-                loading={idx === 0 ? "eager" : undefined}
+                fetchPriority={idx === 0 ? "high" : "auto"}
+                loading="eager"
                 className="origin-center object-cover transition-opacity duration-700"
                 sizes="(max-w-768px) 100vw, 25vw"
                 style={{
@@ -143,14 +159,16 @@ export function FlagshipCard({
               />
             </div>
           </SafeTransition>
-        </m.div>
+        </div>
       </div>
 
-      <AmbientVisualizer
-        type={product.id}
-        isHovered={isHovered}
-        theme={activeTheme || "dark"}
-      />
+      {showAmbientVisualizer ? (
+        <AmbientVisualizer
+          type={product.id}
+          isHovered={isHovered}
+          theme={activeTheme || "dark"}
+        />
+      ) : null}
       <div className="relative z-20 flex items-center justify-between">
         <span className="text-store-min text-muted-foreground font-mono tracking-[0.2em] uppercase">
           {product.category}
@@ -167,11 +185,8 @@ export function FlagshipCard({
       <div className="min-h-[140px] flex-1 md:min-h-[220px]" />
 
       <div className="relative z-20 mt-auto flex flex-col gap-4">
-        <m.div layout className="flex flex-col select-none">
-          <m.div
-            layout="position"
-            className="transition-transform duration-300"
-          >
+        <div className="flex flex-col select-none">
+          <div className="transition-transform duration-300">
             <SafeTransition
               name={isTransitioning ? `product-name-${product.id}` : undefined}
             >
@@ -182,7 +197,7 @@ export function FlagshipCard({
                 </span>
               </h2>
             </SafeTransition>
-          </m.div>
+          </div>
 
           <AnimatePresence initial={false}>
             {isHovered && (
@@ -199,7 +214,7 @@ export function FlagshipCard({
               </m.div>
             )}
           </AnimatePresence>
-        </m.div>
+        </div>
 
         <div className="border-border flex flex-col gap-1.5 border-t pt-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
           {Object.entries(product.specifications)
@@ -246,6 +261,6 @@ export function FlagshipCard({
           </div>
         </div>
       </div>
-    </m.div>
+    </div>
   );
 }

@@ -41,7 +41,7 @@ export const PRODUCT_EXTENSIONS: Record<string, ProductExtension> = {
   headphones: {
     discountPercent: 15,
     gallery: [
-      "/products/headphones.png",
+      "/products/headphones.webp",
       "https://images.unsplash.com/photo-1546435770-a3e426bf472b?q=80&w=600&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1484704849700-f032a568e944?q=80&w=600&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1583394838336-acd977736f90?q=80&w=600&auto=format&fit=crop",
@@ -174,7 +174,7 @@ export const PRODUCT_EXTENSIONS: Record<string, ProductExtension> = {
   keyboard: {
     discountPercent: 20,
     gallery: [
-      "/products/keyboard.png",
+      "/products/keyboard.webp",
       "https://images.unsplash.com/photo-1587829741301-dc798b83add3?q=80&w=600&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?q=80&w=600&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1595225476474-87563907a212?q=80&w=600&auto=format&fit=crop",
@@ -283,7 +283,7 @@ export const PRODUCT_EXTENSIONS: Record<string, ProductExtension> = {
   carafe: {
     discountPercent: 10,
     gallery: [
-      "/products/carafe.png",
+      "/products/carafe.webp",
       "https://images.unsplash.com/photo-1527018601619-a508a2be00cd?q=80&w=600&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?q=80&w=600&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1600271886742-f049cd451bba?q=80&w=600&auto=format&fit=crop",
@@ -392,7 +392,7 @@ export const PRODUCT_EXTENSIONS: Record<string, ProductExtension> = {
   incense: {
     discountPercent: 25,
     gallery: [
-      "/products/incense.png",
+      "/products/incense.webp",
       "https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=600&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1603006905003-be475563bc59?q=80&w=600&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1612817288484-6f916006741a?q=80&w=600&auto=format&fit=crop",
@@ -513,10 +513,10 @@ export function getProductExtension(
   const discount = 15;
   const gallery = [
     isAudio
-      ? "/products/headphones.png"
+      ? "/products/headphones.webp"
       : isLiving
-        ? "/products/carafe.png"
-        : "/products/pen.png",
+        ? "/products/carafe.webp"
+        : "/products/pen.webp",
     "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=600&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=600&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=600&auto=format&fit=crop",
