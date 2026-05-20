@@ -122,8 +122,8 @@ export function FlagshipCard({
                 src={product.image}
                 alt={product.name}
                 fill
-                priority={idx < 2}
-                loading={idx < 2 ? "eager" : "lazy"}
+                priority={idx === 0}
+                loading={idx === 0 ? "eager" : undefined}
                 className="origin-center object-cover transition-opacity duration-700"
                 sizes="(max-w-768px) 100vw, 25vw"
                 style={{
