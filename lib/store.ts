@@ -6,6 +6,7 @@ export interface CartItem {
     quantity: number;
     selectedColor?: string;
 }
+
 interface StoreState {
     cart: CartItem[];
     isCartOpen: boolean;
@@ -15,6 +16,7 @@ interface StoreState {
     updateQuantity: (productId: string, quantity: number, color?: string) => void;
     clearCart: () => void;
 }
+
 export const useStore = create<StoreState>()(persist((set) => ({
     cart: [],
     isCartOpen: false,

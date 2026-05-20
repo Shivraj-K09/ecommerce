@@ -26,11 +26,13 @@ export default function CategoryPage({
       setPriceFilter(filter);
     });
   };
+
   const handleSortChange = (sort: "featured" | "price-low" | "price-high") => {
     startTransition(() => {
       setSortBy(sort);
     });
   };
+
   const categoryProducts =
     id === "all" ? PRODUCTS : PRODUCTS.filter((p) => p.category === id);
   const filteredProducts = categoryProducts.filter((product) => {
@@ -47,28 +49,36 @@ export default function CategoryPage({
   function pickPriceAll() {
     handlePriceFilterChange("all");
   }
+
   function pickPriceUnder150() {
     handlePriceFilterChange("under-150");
   }
+
   function pickPriceUnder300() {
     handlePriceFilterChange("under-300");
   }
+
   function pickPriceOver300() {
     handlePriceFilterChange("over-300");
   }
+
   function pickSortFeatured() {
     handleSortChange("featured");
   }
+
   function pickSortPriceLow() {
     handleSortChange("price-low");
   }
+
   function pickSortPriceHigh() {
     handleSortChange("price-high");
   }
+
   function resetCatalogFilters() {
     handlePriceFilterChange("all");
     handleSortChange("featured");
   }
+
   return (
     <div className="relative w-full bg-background text-foreground overflow-x-hidden font-sans select-none transition-colors duration-500 flex flex-col">
       <div className="absolute inset-0 pointer-events-none z-0">
@@ -142,7 +152,8 @@ export default function CategoryPage({
               <button
                 type="button"
                 onClick={pickPriceAll}
-                className={`font-mono text-[10.5px] tracking-widest uppercase text-left transition-all duration-300 py-1 cursor-pointer flex items-center gap-2 focus:outline-none ${
+                aria-pressed={priceFilter === "all"}
+                className={`font-mono text-[10.5px] tracking-widest uppercase text-left transition-all duration-300 py-1 cursor-pointer flex items-center gap-2 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 ${
                   priceFilter === "all"
                     ? "text-foreground font-semibold translate-x-1"
                     : "text-muted-foreground hover:text-foreground"
@@ -157,7 +168,7 @@ export default function CategoryPage({
               <button
                 type="button"
                 onClick={pickPriceUnder150}
-                className={`font-mono text-[10.5px] tracking-widest uppercase text-left transition-all duration-300 py-1 cursor-pointer flex items-center gap-2 focus:outline-none ${
+                className={`font-mono text-[10.5px] tracking-widest uppercase text-left transition-all duration-300 py-1 cursor-pointer flex items-center gap-2 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 ${
                   priceFilter === "under-150"
                     ? "text-foreground font-semibold translate-x-1"
                     : "text-muted-foreground hover:text-foreground"
@@ -172,7 +183,7 @@ export default function CategoryPage({
               <button
                 type="button"
                 onClick={pickPriceUnder300}
-                className={`font-mono text-[10.5px] tracking-widest uppercase text-left transition-all duration-300 py-1 cursor-pointer flex items-center gap-2 focus:outline-none ${
+                className={`font-mono text-[10.5px] tracking-widest uppercase text-left transition-all duration-300 py-1 cursor-pointer flex items-center gap-2 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 ${
                   priceFilter === "under-300"
                     ? "text-foreground font-semibold translate-x-1"
                     : "text-muted-foreground hover:text-foreground"
@@ -187,7 +198,7 @@ export default function CategoryPage({
               <button
                 type="button"
                 onClick={pickPriceOver300}
-                className={`font-mono text-[10.5px] tracking-widest uppercase text-left transition-all duration-300 py-1 cursor-pointer flex items-center gap-2 focus:outline-none ${
+                className={`font-mono text-[10.5px] tracking-widest uppercase text-left transition-all duration-300 py-1 cursor-pointer flex items-center gap-2 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 ${
                   priceFilter === "over-300"
                     ? "text-foreground font-semibold translate-x-1"
                     : "text-muted-foreground hover:text-foreground"
@@ -208,7 +219,8 @@ export default function CategoryPage({
               <button
                 type="button"
                 onClick={pickSortFeatured}
-                className={`font-mono text-[10.5px] tracking-widest uppercase text-left transition-all duration-300 py-1 cursor-pointer flex items-center gap-2 focus:outline-none ${
+                aria-pressed={sortBy === "featured"}
+                className={`font-mono text-[10.5px] tracking-widest uppercase text-left transition-all duration-300 py-1 cursor-pointer flex items-center gap-2 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 ${
                   sortBy === "featured"
                     ? "text-foreground font-semibold translate-x-1"
                     : "text-muted-foreground hover:text-foreground"
@@ -223,7 +235,7 @@ export default function CategoryPage({
               <button
                 type="button"
                 onClick={pickSortPriceLow}
-                className={`font-mono text-[10.5px] tracking-widest uppercase text-left transition-all duration-300 py-1 cursor-pointer flex items-center gap-2 focus:outline-none ${
+                className={`font-mono text-[10.5px] tracking-widest uppercase text-left transition-all duration-300 py-1 cursor-pointer flex items-center gap-2 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 ${
                   sortBy === "price-low"
                     ? "text-foreground font-semibold translate-x-1"
                     : "text-muted-foreground hover:text-foreground"
@@ -238,7 +250,7 @@ export default function CategoryPage({
               <button
                 type="button"
                 onClick={pickSortPriceHigh}
-                className={`font-mono text-[10.5px] tracking-widest uppercase text-left transition-all duration-300 py-1 cursor-pointer flex items-center gap-2 focus:outline-none ${
+                className={`font-mono text-[10.5px] tracking-widest uppercase text-left transition-all duration-300 py-1 cursor-pointer flex items-center gap-2 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 ${
                   sortBy === "price-high"
                     ? "text-foreground font-semibold translate-x-1"
                     : "text-muted-foreground hover:text-foreground"

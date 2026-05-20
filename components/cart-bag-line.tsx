@@ -1,45 +1,26 @@
 "use client";
 
-import { startTransition, ViewTransition } from "react";
+import Link from "next/link";
+import { ViewTransition } from "react";
 import Image from "next/image";
 import { toast } from "sonner";
 import { CATEGORY_LABEL_NAMES } from "@/lib/data";
 import { formatInr } from "@/lib/money";
 import type { CartItem } from "@/lib/store";
 
-type PushFn = (href: string) => void;
-
 type CartBagLineProps = {
   item: CartItem;
-  push: PushFn;
+  push: (href: string) => void;
   updateQuantity: (productId: string, quantity: number, color?: string) => void;
   removeFromCart: (productId: string, color?: string) => void;
 };
 
 export function CartBagLine({
   item,
-  push,
   updateQuantity,
   removeFromCart,
 }: CartBagLineProps) {
   const productPath = `/category/${item.product.category}/product/${item.product.id}`;
-
-  function navigateToProduct() {
-    startTransition(() => {
-      push(productPath);
-    });
-  }
-
-  function handleImageKeyDown(e: React.KeyboardEvent) {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      navigateToProduct();
-    }
-  }
-
-  function handleTitleKeyDown(e: React.KeyboardEvent) {
-    handleImageKeyDown(e);
-  }
 
   function handleDecrement() {
     updateQuantity(item.product.id, item.quantity - 1, item.selectedColor);
@@ -61,12 +42,9 @@ export function CartBagLine({
         share="morph"
         default="none"
       >
-        <div
-          role="button"
-          tabIndex={0}
-          onClick={navigateToProduct}
-          onKeyDown={handleImageKeyDown}
-          className="relative w-24 md:w-28 aspect-3/4 bg-muted/5 border border-foreground/5 cursor-pointer shrink-0 outline-offset-2"
+        <Link
+          href={productPath}
+          className="relative block w-24 md:w-28 aspect-3/4 bg-muted/5 border border-foreground/5 cursor-pointer shrink-0 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
         >
           <Image
             src={item.product.image}
@@ -76,7 +54,7 @@ export function CartBagLine({
             className="object-cover"
             sizes="112px"
           />
-        </div>
+        </Link>
       </ViewTransition>
 
       <div className="flex-1 flex flex-col justify-between text-left">
@@ -103,14 +81,13 @@ export function CartBagLine({
             share="morph"
             default="none"
           >
-            <h3
-              role="button"
-              tabIndex={0}
-              onClick={navigateToProduct}
-              onKeyDown={handleTitleKeyDown}
-              className="font-sans font-light text-base md:text-lg uppercase tracking-wider text-foreground hover:text-muted-foreground transition-colors cursor-pointer mt-1 outline-offset-2"
-            >
-              {item.product.name}
+            <h3 className="font-sans font-light text-base md:text-lg uppercase tracking-wider mt-1">
+              <Link
+                href={productPath}
+                className="text-foreground hover:text-muted-foreground transition-colors focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+              >
+                {item.product.name}
+              </Link>
             </h3>
           </ViewTransition>
 
@@ -122,20 +99,29 @@ export function CartBagLine({
         </div>
 
         <div className="flex items-center justify-between mt-6">
-          <div className="flex items-center gap-4">
+          <div
+            className="flex items-center gap-4"
+            role="group"
+            aria-label={`Quantity for ${item.product.name}`}
+          >
             <button
               type="button"
               onClick={handleDecrement}
+              aria-label={`Decrease quantity of ${item.product.name}`}
               className="font-mono text-sm text-muted-foreground hover:text-foreground cursor-pointer transition-colors p-1"
             >
               —
             </button>
-            <span className="font-mono text-[11px] text-foreground font-semibold min-w-[16px] text-center">
+            <span
+              className="font-mono text-[11px] text-foreground font-semibold min-w-[16px] text-center"
+              aria-live="polite"
+            >
               {item.quantity}
             </span>
             <button
               type="button"
               onClick={handleIncrement}
+              aria-label={`Increase quantity of ${item.product.name}`}
               className="font-mono text-sm text-muted-foreground hover:text-foreground cursor-pointer transition-colors p-1"
             >
               +
@@ -154,3 +140,4 @@ export function CartBagLine({
     </div>
   );
 }
+

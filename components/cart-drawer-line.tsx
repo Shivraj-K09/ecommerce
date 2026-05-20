@@ -54,11 +54,11 @@ export function CartDrawerLine({ item, updateQuantity, removeFromCart, }: CartDr
           <div className="flex items-center gap-2.5 font-mono text-[9px] tracking-wider text-muted-foreground select-none">
             <span>QTY</span>
             <div className="flex items-center gap-1.5 text-foreground">
-              <button type="button" onClick={handleDecrement} className="hover:text-muted-foreground/70 transition-colors px-1 cursor-pointer">
+              <button type="button" onClick={handleDecrement} aria-label={`Decrease quantity of ${item.product.name}`} className="hover:text-muted-foreground/70 transition-colors px-1 cursor-pointer">
                 -
               </button>
               <span className="font-bold">{item.quantity}</span>
-              <button type="button" onClick={handleIncrement} className="hover:text-muted-foreground/70 transition-colors px-1 cursor-pointer">
+              <button type="button" onClick={handleIncrement} aria-label={`Increase quantity of ${item.product.name}`} className="hover:text-muted-foreground/70 transition-colors px-1 cursor-pointer">
                 +
               </button>
             </div>

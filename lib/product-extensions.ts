@@ -451,10 +451,12 @@ export const PRODUCT_EXTENSIONS: Record<string, ProductExtension> = {
         },
     },
 };
+
 export function getProductExtension(productId: string, productCategory: string): ProductExtension {
     if (PRODUCT_EXTENSIONS[productId]) {
         return PRODUCT_EXTENSIONS[productId];
     }
+
     const isAudio = productCategory === "electronics";
     const isLiving = productCategory === "living";
     const discount = 15;

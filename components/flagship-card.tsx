@@ -16,16 +16,19 @@ interface FlagshipCardProps {
     setHoveredPanel: (idx: number | null) => void;
     handleAddDirect: (product: Product, e: React.MouseEvent) => void;
 }
+
 function SafeTransition({ children, name, }: {
     children: React.ReactNode;
     name?: string;
 }) {
     if (!name)
         return <>{children}</>;
+
     return (<ViewTransition name={name} share="morph" default="none">
       {children}
     </ViewTransition>);
 }
+
 export function FlagshipCard({ product, idx, hoveredPanel, setHoveredPanel, handleAddDirect, }: FlagshipCardProps) {
     const { theme } = useTheme();
     const { push } = useRouter();
@@ -33,6 +36,7 @@ export function FlagshipCard({ product, idx, hoveredPanel, setHoveredPanel, hand
     const [mounted, setMounted] = useState(false);
     React.useEffect(() => {
         const timer = setTimeout(() => setMounted(true), 0);
+
         return () => clearTimeout(timer);
     }, []);
     const activeTheme = mounted ? theme : "dark";
@@ -67,7 +71,14 @@ export function FlagshipCard({ product, idx, hoveredPanel, setHoveredPanel, hand
         handleAddDirect(product, e);
     }
 
-    return (<m.div onMouseEnter={handlePanelEnter} onMouseLeave={handlePanelLeave} onClick={handlePanelNavigate} className="relative min-w-0 flex-1 basis-0 border-b md:border-b-0 md:border-r last:border-r-0 border-border overflow-hidden group flex flex-col justify-between p-8 bg-card hover:bg-muted/10 transition-all duration-500 cursor-pointer" animate={{
+    function handlePanelKeyDown(e: React.KeyboardEvent) {
+        if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            handlePanelNavigate();
+        }
+    }
+
+    return (<m.div onMouseEnter={handlePanelEnter} onMouseLeave={handlePanelLeave} onClick={handlePanelNavigate} onKeyDown={handlePanelKeyDown} tabIndex={0} role="group" aria-label={`${product.name}, ${formatInr(product.price)}`} className="relative min-w-0 flex-1 basis-0 border-b md:border-b-0 md:border-r last:border-r-0 border-border overflow-hidden group flex flex-col justify-between p-8 bg-card hover:bg-muted/10 transition-all duration-500 cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50" animate={{
             flexGrow: isHovered ? 1.45 : isAnyHovered ? 0.85 : 1,
             flexShrink: 1,
         }} transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}>

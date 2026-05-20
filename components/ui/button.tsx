@@ -28,10 +28,11 @@ const buttonVariants = cva("group/button inline-flex shrink-0 items-center justi
         size: "default",
     },
 });
-function Button({ className, variant = "default", size = "default", asChild = false, ...props }: React.ComponentProps<"button"> & VariantProps<typeof buttonVariants> & {
+function Button({ className, variant = "default", size = "default", asChild = false, type, ...props }: React.ComponentProps<"button"> & VariantProps<typeof buttonVariants> & {
     asChild?: boolean;
 }) {
     const Comp = asChild ? Slot.Root : "button";
-    return (<Comp data-slot="button" data-variant={variant} data-size={size} className={cn(buttonVariants({ variant, size, className }))} {...props}/>);
+
+    return (<Comp data-slot="button" data-variant={variant} data-size={size} type={asChild ? type : type ?? "button"} className={cn(buttonVariants({ variant, size, className }))} {...props}/>);
 }
 export { Button, buttonVariants };

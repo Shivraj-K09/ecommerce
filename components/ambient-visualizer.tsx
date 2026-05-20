@@ -5,6 +5,7 @@ interface AmbientVisualizerProps {
     isHovered: boolean;
     theme: string;
 }
+
 export function AmbientVisualizer({ type, isHovered, theme }: AmbientVisualizerProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const mouseRef = useRef({ x: 0, y: 0, targetX: 0, targetY: 0 });
@@ -77,6 +78,7 @@ export function AmbientVisualizer({ type, isHovered, theme }: AmbientVisualizerP
             mouseRef.current.targetX = e.clientX - rect.left;
             mouseRef.current.targetY = e.clientY - rect.top;
         };
+
         const parent = canvas.parentElement;
         parent?.addEventListener("mousemove", handleMouseMove);
         mouseRef.current.x = canvas.offsetWidth / 2;
@@ -268,6 +270,7 @@ export function AmbientVisualizer({ type, isHovered, theme }: AmbientVisualizerP
                         state.smokeParticles.splice(idx, 1);
                         return;
                     }
+
                     const waveDrift = Math.sin(p.life * 0.02 + idx) * 0.08;
                     p.vx += waveDrift;
                     if (isHovered) {
@@ -304,11 +307,13 @@ export function AmbientVisualizer({ type, isHovered, theme }: AmbientVisualizerP
             animationId = requestAnimationFrame(draw);
         };
         draw();
+
         return () => {
             cancelAnimationFrame(animationId);
             window.removeEventListener("resize", handleResize);
             parent?.removeEventListener("mousemove", handleMouseMove);
         };
     }, [type, isHovered, theme]);
-    return (<canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none z-10 opacity-70 group-hover:opacity-100 transition-opacity duration-500"/>);
+
+    return (<canvas ref={canvasRef} aria-hidden="true" className="absolute inset-0 w-full h-full pointer-events-none z-10 opacity-70 group-hover:opacity-100 transition-opacity duration-500"/>);
 }

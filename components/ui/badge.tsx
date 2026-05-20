@@ -21,6 +21,7 @@ function Badge({ className, variant = "default", asChild = false, ...props }: Re
     asChild?: boolean;
 }) {
     const Comp = asChild ? Slot.Root : "span";
+
     return (<Comp data-slot="badge" data-variant={variant} className={cn(badgeVariants({ variant }), className)} {...props}/>);
 }
 export { Badge, badgeVariants };

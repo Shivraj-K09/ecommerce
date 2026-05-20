@@ -52,6 +52,7 @@ export default function ProductDetailPage({
       });
     }
   };
+
   const handleReviewsScroll = (direction: "left" | "right") => {
     if (reviewsScrollRef.current) {
       const scrollAmount = 360;
@@ -61,7 +62,9 @@ export default function ProductDetailPage({
       });
     }
   };
+
   if (!product) {
+
     return (
       <div className="h-screen w-screen bg-background flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
@@ -72,10 +75,13 @@ export default function ProductDetailPage({
       </div>
     );
   }
+
   const ext = getProductExtension(product.id, product.category);
+
   const discountAmount = Math.round(
     product.price * (ext.discountPercent / 100),
   );
+
   const originalPrice = product.price + discountAmount;
   const handleAddAction = (directCheckout = false) => {
     addToCart(product, selectedColor);
@@ -88,6 +94,7 @@ export default function ProductDetailPage({
       });
     }
   };
+
   const relatedProducts = PRODUCTS.filter(
     (p) => p.id !== product.id && p.category === product.category,
   );
@@ -96,32 +103,41 @@ export default function ProductDetailPage({
       push(`/category/${product.category}`);
     });
   };
+
   const goCrumbsHome = () => {
     push("/");
   };
+
   const goCrumbsCategory = () => {
     startTransition(() => {
       push(`/category/${product.category}`);
     });
   };
+
   const handleBuyNow = () => {
     handleAddAction(true);
   };
+
   const handleAddToBagOnly = () => {
     handleAddAction(false);
   };
+
   const scrollRelatedPrev = () => {
     handleScroll("left");
   };
+
   const scrollRelatedNext = () => {
     handleScroll("right");
   };
+
   const scrollReviewsPrev = () => {
     handleReviewsScroll("left");
   };
+
   const scrollReviewsNext = () => {
     handleReviewsScroll("right");
   };
+
   return (
     <div className="relative w-full bg-background text-foreground overflow-x-hidden font-sans select-none pb-12">
       <div className="absolute inset-0 pointer-events-none z-0">
@@ -133,14 +149,17 @@ export default function ProductDetailPage({
           <button
             type="button"
             onClick={goBackToCollection}
-            className="group flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.2em] text-foreground hover:text-foreground/75 transition-colors cursor-pointer select-none bg-transparent border-none p-0 outline-none w-fit font-semibold"
+            className="group flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.2em] text-foreground hover:text-foreground/75 transition-colors cursor-pointer select-none bg-transparent border-none p-0 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 w-fit font-semibold"
           >
             <IconArrowLeft className="size-3.5 stroke-[1.8] transition-transform duration-300 group-hover:-translate-x-1" />
             <span>BACK TO COLLECTION</span>
           </button>
         </div>
 
-        <div className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-widest text-muted-foreground/60 mb-5 select-none">
+        <nav
+          aria-label="Breadcrumb"
+          className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-widest text-muted-foreground/60 mb-5 select-none"
+        >
           <button
             type="button"
             className="hover:text-foreground cursor-pointer transition-colors bg-transparent border-0 p-0 font-mono text-[9px] uppercase tracking-widest text-muted-foreground/60"
@@ -157,8 +176,10 @@ export default function ProductDetailPage({
             {CATEGORY_LABEL_NAMES[product.category] || product.category}
           </button>
           <span>/</span>
-          <span className="text-foreground font-semibold">{product.name}</span>
-        </div>
+          <span className="text-foreground font-semibold" aria-current="page">
+            {product.name}
+          </span>
+        </nav>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-stretch">
           <div className="lg:col-span-7 flex flex-col gap-4 justify-between h-full">
@@ -198,7 +219,9 @@ export default function ProductDetailPage({
                   key={imgUrl}
                   type="button"
                   onClick={setActiveImage.bind(null, imgUrl)}
-                  className={`relative aspect-[1.4] overflow-hidden rounded-md bg-muted/10 border transition-all duration-200 cursor-pointer ${
+                  aria-pressed={activeImage === imgUrl}
+                  aria-label={`View ${product.name}, image ${thumbIndex + 1}`}
+                  className={`relative aspect-[1.4] overflow-hidden rounded-md bg-muted/10 border transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 ${
                     activeImage === imgUrl
                       ? "border-foreground scale-[0.98]"
                       : "border-foreground/5 opacity-70 hover:opacity-100 hover:border-foreground/20"
@@ -305,6 +328,7 @@ export default function ProductDetailPage({
                       icon: "text-violet-500",
                     },
                   ][idx % 4];
+
                   return (
                     <div
                       key={badge.label}
@@ -427,29 +451,35 @@ export default function ProductDetailPage({
               <button
                 type="button"
                 onClick={scrollReviewsPrev}
-                className="size-10 rounded-full border border-foreground/10 hover:border-foreground/35 flex items-center justify-center text-foreground hover:bg-foreground/2 active:scale-95 transition-all cursor-pointer"
-                title="Scroll Left"
+                aria-label="Scroll reviews left"
+                className="size-10 rounded-full border border-foreground/10 hover:border-foreground/35 flex items-center justify-center text-foreground hover:bg-foreground/2 active:scale-95 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
               >
                 <IconArrowRight className="size-4 rotate-180" />
               </button>
               <button
                 type="button"
                 onClick={scrollReviewsNext}
-                className="size-10 rounded-full border border-foreground/10 hover:border-foreground/35 flex items-center justify-center text-foreground hover:bg-foreground/2 active:scale-95 transition-all cursor-pointer"
-                title="Scroll Right"
+                aria-label="Scroll reviews right"
+                className="size-10 rounded-full border border-foreground/10 hover:border-foreground/35 flex items-center justify-center text-foreground hover:bg-foreground/2 active:scale-95 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
               >
                 <IconArrowRight className="size-4" />
               </button>
             </div>
           </div>
 
-          <div className="flex justify-start gap-6 border-b border-foreground/5 mb-8 select-none">
+          <div
+            role="tablist"
+            aria-label="Review categories"
+            className="flex justify-start gap-6 border-b border-foreground/5 mb-8 select-none"
+          >
             {(["top", "moderate", "bad"] as const).map((tab) => (
               <button
                 key={tab}
                 type="button"
+                role="tab"
+                aria-selected={reviewTab === tab}
                 onClick={setReviewTab.bind(null, tab)}
-                className={`pb-3 font-mono text-[9.5px] tracking-[0.2em] uppercase text-left cursor-pointer transition-colors relative ${
+                className={`pb-3 font-mono text-[9.5px] tracking-[0.2em] uppercase text-left cursor-pointer transition-colors relative focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 ${
                   reviewTab === tab
                     ? "text-foreground font-semibold"
                     : "text-muted-foreground/50 hover:text-foreground"
@@ -471,7 +501,11 @@ export default function ProductDetailPage({
             ))}
           </div>
 
-          <div className="relative w-full text-left">
+          <div
+            className="relative w-full text-left"
+            role="tabpanel"
+            aria-label="Customer reviews"
+          >
             <AnimatePresence mode="wait">
               <m.div
                 key={reviewTab}
@@ -494,6 +528,7 @@ export default function ProductDetailPage({
                     "bg-sky-500/10 text-sky-600 dark:text-sky-400",
                     "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400",
                   ][idx % 4];
+
                   return (
                     <div
                       key={`${reviewTab}-${rev.author}-${rev.date}-${rev.title}`}
@@ -563,16 +598,16 @@ export default function ProductDetailPage({
                 <button
                   type="button"
                   onClick={scrollRelatedPrev}
-                  className="size-10 rounded-full border border-foreground/10 hover:border-foreground/35 flex items-center justify-center text-foreground hover:bg-foreground/2 active:scale-95 transition-all cursor-pointer"
-                  title="Scroll Left"
+                  aria-label="Scroll related products left"
+                  className="size-10 rounded-full border border-foreground/10 hover:border-foreground/35 flex items-center justify-center text-foreground hover:bg-foreground/2 active:scale-95 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
                 >
                   <IconArrowRight className="size-4 rotate-180" />
                 </button>
                 <button
                   type="button"
                   onClick={scrollRelatedNext}
-                  className="size-10 rounded-full border border-foreground/10 hover:border-foreground/35 flex items-center justify-center text-foreground hover:bg-foreground/2 active:scale-95 transition-all cursor-pointer"
-                  title="Scroll Right"
+                  aria-label="Scroll related products right"
+                  className="size-10 rounded-full border border-foreground/10 hover:border-foreground/35 flex items-center justify-center text-foreground hover:bg-foreground/2 active:scale-95 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
                 >
                   <IconArrowRight className="size-4" />
                 </button>

@@ -59,6 +59,7 @@ export const CATEGORY_LABEL_NAMES: Record<string, string> = {
     writing: "TACTILE",
     wellness: "WELLNESS",
 };
+
 export const CATEGORIES = [
     { id: "all", name: "All Products" },
     { id: "electronics", name: "Audio & Tech" },

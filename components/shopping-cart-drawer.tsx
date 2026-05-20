@@ -26,6 +26,7 @@ export function ShoppingCartDrawer() {
             push("/cart");
         });
     }
+
     return (<Sheet open={isCartOpen} onOpenChange={setCartOpen}>
       <SheetContent side="right" className="w-full sm:max-w-[450px] p-0 flex flex-col justify-between h-full bg-background/98 dark:bg-background/98 backdrop-blur-3xl border-l border-foreground/5 shadow-2xl z-100">
         
@@ -40,8 +41,8 @@ export function ShoppingCartDrawer() {
                   [{totalItems} ITEMS]
                 </span>
               </div>
-              <SheetDescription className="hidden">
-                Luxury shopping cart product list
+              <SheetDescription className="sr-only">
+                Items in your shopping bag and checkout summary
               </SheetDescription>
             </SheetHeader>
 

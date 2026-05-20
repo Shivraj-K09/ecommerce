@@ -18,11 +18,13 @@ export const metadata: Metadata = {
   description:
     "An archive of curated everyday objects crafted with material precision to complement and elevate physical living environments.",
 };
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <html
       lang="en"

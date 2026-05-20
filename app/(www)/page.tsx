@@ -1,6 +1,5 @@
 "use client";
-import React, { useState, useEffect, startTransition } from "react";
-import { useTheme } from "next-themes";
+import React, { useState, startTransition } from "react";
 import { useRouter } from "next/navigation";
 import { PRODUCTS, Product } from "@/lib/data";
 import { FlagshipCard } from "@/components/flagship-card";
@@ -10,7 +9,6 @@ import { useStore } from "@/lib/store";
 import { toast } from "sonner";
 import { IconArrowUpRight, IconCpu, IconHome, IconPencil, IconActivity } from "@tabler/icons-react";
 export default function Home() {
-    const { theme, setTheme } = useTheme();
     const { push } = useRouter();
     const addToCart = useStore((state) => state.addToCart);
     const [hoveredPanel, setHoveredPanel] = useState<number | null>(null);
@@ -20,24 +18,6 @@ export default function Home() {
         "carafe",
         "incense",
     ]);
-    useEffect(() => {
-        const handleKeyDown = (e: KeyboardEvent) => {
-            const activeEl = document.activeElement;
-            if (activeEl &&
-                (activeEl.tagName === "INPUT" ||
-                    activeEl.tagName === "TEXTAREA" ||
-                    activeEl.hasAttribute("contenteditable"))) {
-                return;
-            }
-            if (e.key.toLowerCase() === "d") {
-                e.preventDefault();
-                const nextTheme = theme === "dark" ? "light" : "dark";
-                setTheme(nextTheme);
-            }
-        };
-        window.addEventListener("keydown", handleKeyDown);
-        return () => window.removeEventListener("keydown", handleKeyDown);
-    }, [theme, setTheme]);
     const handleAddDirect = (product: Product, e: React.MouseEvent) => {
         e.stopPropagation();
         addToCart(product, product.colors[0]?.name);
@@ -48,6 +28,7 @@ export default function Home() {
             push("/cart");
         });
     };
+
     const activeFlagshipProducts = flagshipIds.map((id) => PRODUCTS.find((p) => p.id === id) || PRODUCTS[0]);
     const audioProducts = PRODUCTS.filter((p) => p.category === "electronics");
     const livingProducts = PRODUCTS.filter((p) => p.category === "living");
@@ -58,30 +39,35 @@ export default function Home() {
             push("/category/electronics");
         });
     }
+
     function exploreLiving() {
         startTransition(() => {
             push("/category/living");
         });
     }
+
     function exploreWriting() {
         startTransition(() => {
             push("/category/writing");
         });
     }
+
     function exploreWellness() {
         startTransition(() => {
             push("/category/wellness");
         });
     }
+
     return (<div className="relative w-full bg-background text-foreground overflow-x-hidden font-sans select-none transition-colors duration-500 flex flex-col">
+      <h1 className="sr-only">AURA — Curated everyday objects</h1>
       <div className="absolute inset-0 pointer-events-none z-0">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-muted/30 via-transparent to-transparent pointer-events-none"/>
       </div>
 
       
-      <main className="flex w-full min-w-0 flex-col md:flex-row md:items-stretch h-[74vh] min-h-[580px] border-y border-border bg-card relative z-20 mt-5">
+      <section aria-label="Featured collections" className="flex w-full min-w-0 flex-col md:flex-row md:items-stretch h-[74vh] min-h-[580px] border-y border-border bg-card relative z-20 mt-5">
         {activeFlagshipProducts.map((product, idx) => (<FlagshipCard key={product.id} product={product} idx={idx} hoveredPanel={hoveredPanel} setHoveredPanel={setHoveredPanel} handleAddDirect={handleAddDirect}/>))}
-      </main>
+      </section>
 
       
       <section className="w-full px-6 md:px-12 py-24 relative z-20 flex flex-col gap-28">
