@@ -11,7 +11,6 @@ import { formatInr } from "@/lib/money";
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 import { Button } from "@/components/ui/button";
 import { IconShoppingBag, IconEye } from "@tabler/icons-react";
-import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 const AmbientVisualizer = dynamic(
@@ -21,13 +20,15 @@ const AmbientVisualizer = dynamic(
     ),
   { ssr: false },
 );
-interface FlagshipCardProps {
+
+type FlagshipPanelClientProps = {
   product: Product;
   idx: number;
   hoveredPanel: number | null;
   setHoveredPanel: (idx: number | null) => void;
   handleAddDirect: (product: Product, e: React.MouseEvent) => void;
-}
+  image: React.ReactNode;
+};
 
 function SafeTransition({
   children,
@@ -45,22 +46,25 @@ function SafeTransition({
   );
 }
 
-export function FlagshipCard({
+export function FlagshipPanelClient({
   product,
   idx,
   hoveredPanel,
   setHoveredPanel,
   handleAddDirect,
-}: FlagshipCardProps) {
+  image,
+}: FlagshipPanelClientProps) {
   const { theme } = useTheme();
   const { push } = useRouter();
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [mounted, setMounted] = useState(false);
+
   React.useEffect(() => {
     const timer = setTimeout(() => setMounted(true), 0);
 
     return () => clearTimeout(timer);
   }, []);
+
   const activeTheme = mounted ? theme : "dark";
   const prefersReducedMotion = usePrefersReducedMotion();
   const isHovered = hoveredPanel === idx;
@@ -132,31 +136,27 @@ export function FlagshipCard({
           <SafeTransition
             name={isTransitioning ? `product-image-${product.id}` : undefined}
           >
-            <div className="absolute inset-0 h-full w-full">
-              <Image
-                src={product.image}
-                alt={product.name}
-                fill
-                priority={idx === 0}
-                fetchPriority={idx === 0 ? "high" : "auto"}
-                loading="eager"
-                className="origin-center object-cover transition-opacity duration-700"
-                sizes="(max-w-768px) 100vw, 25vw"
-                style={{
-                  mixBlendMode: activeTheme === "dark" ? "normal" : "multiply",
-                  filter:
-                    activeTheme === "dark"
-                      ? "brightness(0.85) contrast(1.05)"
-                      : "brightness(0.98) contrast(1.01)",
-                  opacity: isHovered
-                    ? activeTheme === "dark"
-                      ? 0.6
-                      : 0.95
-                    : activeTheme === "dark"
-                      ? 0.45
-                      : 0.85,
-                }}
-              />
+            <div
+              className={cn(
+                "absolute inset-0 h-full w-full transition-opacity duration-700",
+                activeTheme === "dark"
+                  ? isHovered
+                    ? "opacity-60"
+                    : "opacity-45"
+                  : isHovered
+                    ? "opacity-95"
+                    : "opacity-85",
+              )}
+              style={{
+                mixBlendMode:
+                  activeTheme === "dark" ? "normal" : "multiply",
+                filter:
+                  activeTheme === "dark"
+                    ? "brightness(0.85) contrast(1.05)"
+                    : "brightness(0.98) contrast(1.01)",
+              }}
+            >
+              {image}
             </div>
           </SafeTransition>
         </div>
