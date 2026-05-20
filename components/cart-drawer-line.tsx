@@ -42,6 +42,7 @@ export function CartDrawerLine({
           src={item.product.image}
           alt={item.product.name}
           fill
+          loading="lazy"
           className="object-cover transition-opacity duration-300"
           sizes="64px"
         />

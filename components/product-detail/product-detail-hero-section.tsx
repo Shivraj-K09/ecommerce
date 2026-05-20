@@ -99,6 +99,7 @@ export function ProductDetailHeroSection({
                       alt={product.name}
                       fill
                       priority
+                      loading="eager"
                       className="object-cover"
                       sizes="(max-width: 1024px) 100vw, 50vw"
                     />
@@ -126,6 +127,7 @@ export function ProductDetailHeroSection({
                   src={imgUrl}
                   alt={`${product.name} angle ${thumbIndex + 1}`}
                   fill
+                  loading="lazy"
                   className="object-cover"
                   sizes="150px"
                 />

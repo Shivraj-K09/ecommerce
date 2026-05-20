@@ -103,6 +103,7 @@ export function CategoryPageClient({
           alt={meta.title}
           fill
           priority
+          loading="eager"
           className="pointer-events-none object-cover select-none"
           sizes="100vw"
           style={{

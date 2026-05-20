@@ -62,6 +62,7 @@ export function ProductDetailStorySection({ ext }: Props) {
               src={ext.gallery[1]}
               alt="Story detail"
               fill
+              loading="lazy"
               className="object-cover"
               sizes="(max-width: 1024px) 100vw, 40vw"
             />

@@ -50,7 +50,7 @@ export function CartBagLine({
             src={item.product.image}
             alt={item.product.name}
             fill
-            priority
+            loading="lazy"
             className="object-cover"
             sizes="112px"
           />
