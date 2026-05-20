@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Product",
+  title: "Product",
 };
 
-export default function LegacyProductSegmentLayout({ children }: {
-    children: React.ReactNode;
+export default function LegacyProductSegmentLayout({
+  children,
+}: {
+  children: React.ReactNode;
 }) {
-    return children;
+  return children;
 }

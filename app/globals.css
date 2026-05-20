@@ -52,16 +52,16 @@ body,
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
-  
+
   --text-store-min: 0.6875rem;
   --text-store-caption: 0.75rem;
   --text-store-body: 0.8125rem;
 }
 
 :root {
-  --background: oklch(0.975 0.002 70); 
-  --foreground: oklch(0.145 0 0); 
-  --card: oklch(0.982 0.001 70); 
+  --background: oklch(0.975 0.002 70);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(0.982 0.001 70);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(0.982 0.001 70);
   --popover-foreground: oklch(0.145 0 0);
@@ -70,11 +70,11 @@ body,
   --secondary: oklch(0.945 0.002 70);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.945 0.002 70);
-  --muted-foreground: oklch(0.485 0 0); 
+  --muted-foreground: oklch(0.485 0 0);
   --accent: oklch(0.945 0.002 70);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.89 0 0); 
+  --border: oklch(0.89 0 0);
   --input: oklch(0.89 0 0);
   --ring: oklch(0.708 0 0);
   --chart-1: oklch(0.87 0 0);
@@ -139,7 +139,6 @@ body,
   }
 }
 
-
 :root {
   --duration-exit: 150ms;
   --duration-enter: 210ms;
@@ -147,13 +146,23 @@ body,
 }
 
 @keyframes fade {
-  from { filter: blur(3px); opacity: 0; }
-  to { filter: blur(0); opacity: 1; }
+  from {
+    filter: blur(3px);
+    opacity: 0;
+  }
+  to {
+    filter: blur(0);
+    opacity: 1;
+  }
 }
 
 @keyframes slide-y {
-  from { transform: translateY(var(--slide-y-offset, 10px)); }
-  to { transform: translateY(0); }
+  from {
+    transform: translateY(var(--slide-y-offset, 10px));
+  }
+  to {
+    transform: translateY(0);
+  }
 }
 
 ::view-transition-old(.fade-out) {
@@ -162,7 +171,6 @@ body,
 ::view-transition-new(.fade-in) {
   animation: var(--duration-enter) ease-out var(--duration-exit) both fade;
 }
-
 
 ::view-transition-group(.morph) {
   animation-duration: var(--duration-move);
@@ -173,7 +181,9 @@ body,
 }
 
 @keyframes via-blur {
-  30% { filter: blur(3px); }
+  30% {
+    filter: blur(3px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

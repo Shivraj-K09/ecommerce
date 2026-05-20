@@ -70,19 +70,24 @@ export function Footer({ width = "default" }: { width?: FooterWidth }) {
   };
 
   return (
-    <footer className="w-full bg-background border-t border-border/40 py-16 mt-auto font-sans relative z-20 select-none text-left">
-      <div className={cn("mx-auto w-full flex flex-col gap-12", footerInnerWidth[width])}>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-16">
-          <div className="lg:col-span-5 flex flex-col gap-6">
+    <footer className="bg-background border-border/40 relative z-20 mt-auto w-full border-t py-16 text-left font-sans select-none">
+      <div
+        className={cn(
+          "mx-auto flex w-full flex-col gap-12",
+          footerInnerWidth[width],
+        )}
+      >
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-12 lg:gap-16">
+          <div className="flex flex-col gap-6 lg:col-span-5">
             <div className="flex flex-col gap-2">
               <button
                 type="button"
                 onClick={goHome}
-                className="font-sans font-semibold text-lg tracking-[0.25em] uppercase text-foreground cursor-pointer hover:opacity-80 transition-opacity w-fit text-left bg-transparent border-0 p-0"
+                className="text-foreground w-fit cursor-pointer border-0 bg-transparent p-0 text-left font-sans text-lg font-semibold tracking-[0.25em] uppercase transition-opacity hover:opacity-80"
               >
                 AURA
               </button>
-              <p className="font-sans font-light text-xs text-muted-foreground max-w-[360px] leading-relaxed">
+              <p className="text-muted-foreground max-w-[360px] font-sans text-xs leading-relaxed font-light">
                 Timeless spatial products crafted with absolute material
                 precision to elevate and complement physical living
                 environments.
@@ -90,12 +95,12 @@ export function Footer({ width = "default" }: { width?: FooterWidth }) {
             </div>
 
             <div className="flex flex-col gap-3">
-              <span className="font-mono text-[9px] tracking-widest text-foreground font-bold uppercase">
+              <span className="text-foreground font-mono text-[9px] font-bold tracking-widest uppercase">
                 SUBSCRIBE TO BRIEFINGS
               </span>
               <form
                 onSubmit={handleSubscribe}
-                className="flex gap-2 max-w-[380px]"
+                className="flex max-w-[380px] gap-2"
               >
                 <label htmlFor="footer-email" className="sr-only">
                   Email address for newsletter
@@ -107,32 +112,32 @@ export function Footer({ width = "default" }: { width?: FooterWidth }) {
                   required
                   autoComplete="email"
                   placeholder="Enter email address"
-                  className="rounded-md font-mono text-[10px] tracking-wider placeholder:text-muted-foreground/35 uppercase border-foreground/10 focus-visible:ring-foreground/20 h-10"
+                  className="placeholder:text-muted-foreground/35 border-foreground/10 focus-visible:ring-foreground/20 h-10 rounded-md font-mono text-[10px] tracking-wider uppercase"
                 />
                 <Button
                   type="submit"
                   variant="default"
-                  className="font-mono text-[10px] tracking-widest uppercase px-5 font-bold h-10 cursor-pointer"
+                  className="h-10 cursor-pointer px-5 font-mono text-[10px] font-bold tracking-widest uppercase"
                 >
                   JOIN
                 </Button>
               </form>
-              <p className="font-mono text-[8.5px] tracking-wider text-muted-foreground/50 uppercase">
+              <p className="text-muted-foreground/50 font-mono text-[8.5px] tracking-wider uppercase">
                 Get priority releases, material schedules, and early briefings.
               </p>
             </div>
           </div>
 
-          <div className="lg:col-span-2 flex flex-col gap-4">
-            <span className="font-mono text-[9px] tracking-widest text-foreground font-bold uppercase">
+          <div className="flex flex-col gap-4 lg:col-span-2">
+            <span className="text-foreground font-mono text-[9px] font-bold tracking-widest uppercase">
               SPECTRUMS
             </span>
-            <ul className="flex flex-col gap-2.5 font-sans font-light text-xs text-muted-foreground uppercase">
+            <ul className="text-muted-foreground flex flex-col gap-2.5 font-sans text-xs font-light uppercase">
               <li>
                 <button
                   type="button"
                   onClick={goHome}
-                  className="hover:text-foreground hover:underline transition-colors bg-transparent border-none p-0 cursor-pointer text-left"
+                  className="hover:text-foreground cursor-pointer border-none bg-transparent p-0 text-left transition-colors hover:underline"
                 >
                   Shop All
                 </button>
@@ -141,7 +146,7 @@ export function Footer({ width = "default" }: { width?: FooterWidth }) {
                 <button
                   type="button"
                   onClick={goElectronics}
-                  className="hover:text-foreground hover:underline transition-colors bg-transparent border-none p-0 cursor-pointer text-left"
+                  className="hover:text-foreground cursor-pointer border-none bg-transparent p-0 text-left transition-colors hover:underline"
                 >
                   Audio
                 </button>
@@ -150,7 +155,7 @@ export function Footer({ width = "default" }: { width?: FooterWidth }) {
                 <button
                   type="button"
                   onClick={goLiving}
-                  className="hover:text-foreground hover:underline transition-colors bg-transparent border-none p-0 cursor-pointer text-left"
+                  className="hover:text-foreground cursor-pointer border-none bg-transparent p-0 text-left transition-colors hover:underline"
                 >
                   Living
                 </button>
@@ -159,7 +164,7 @@ export function Footer({ width = "default" }: { width?: FooterWidth }) {
                 <button
                   type="button"
                   onClick={goWriting}
-                  className="hover:text-foreground hover:underline transition-colors bg-transparent border-none p-0 cursor-pointer text-left"
+                  className="hover:text-foreground cursor-pointer border-none bg-transparent p-0 text-left transition-colors hover:underline"
                 >
                   Tactile
                 </button>
@@ -168,7 +173,7 @@ export function Footer({ width = "default" }: { width?: FooterWidth }) {
                 <button
                   type="button"
                   onClick={goWellness}
-                  className="hover:text-foreground hover:underline transition-colors bg-transparent border-none p-0 cursor-pointer text-left"
+                  className="hover:text-foreground cursor-pointer border-none bg-transparent p-0 text-left transition-colors hover:underline"
                 >
                   Wellness
                 </button>
@@ -176,35 +181,35 @@ export function Footer({ width = "default" }: { width?: FooterWidth }) {
             </ul>
           </div>
 
-          <div className="lg:col-span-2 flex flex-col gap-4">
-            <span className="font-mono text-[9px] tracking-widest text-foreground font-bold uppercase">
+          <div className="flex flex-col gap-4 lg:col-span-2">
+            <span className="text-foreground font-mono text-[9px] font-bold tracking-widest uppercase">
               CUSTOMER CARE
             </span>
-            <ul className="flex flex-col gap-2.5 font-sans font-light text-xs text-muted-foreground uppercase">
-              <li className="cursor-help hover:text-foreground transition-colors">
+            <ul className="text-muted-foreground flex flex-col gap-2.5 font-sans text-xs font-light uppercase">
+              <li className="hover:text-foreground cursor-help transition-colors">
                 Shipping & Delivery
               </li>
-              <li className="cursor-help hover:text-foreground transition-colors">
+              <li className="hover:text-foreground cursor-help transition-colors">
                 Returns & Refunds
               </li>
-              <li className="cursor-help hover:text-foreground transition-colors">
+              <li className="hover:text-foreground cursor-help transition-colors">
                 Order Tracking
               </li>
-              <li className="cursor-help hover:text-foreground transition-colors">
+              <li className="hover:text-foreground cursor-help transition-colors">
                 Secure Checkout
               </li>
-              <li className="cursor-help hover:text-foreground transition-colors">
+              <li className="hover:text-foreground cursor-help transition-colors">
                 Product Care Index
               </li>
             </ul>
           </div>
 
-          <div className="lg:col-span-3 flex flex-col gap-5">
+          <div className="flex flex-col gap-5 lg:col-span-3">
             <div className="flex flex-col gap-3">
-              <span className="font-mono text-[9px] tracking-widest text-foreground font-bold uppercase">
+              <span className="text-foreground font-mono text-[9px] font-bold tracking-widest uppercase">
                 THE STUDIO
               </span>
-              <p className="font-sans font-light text-xs text-muted-foreground leading-relaxed uppercase">
+              <p className="text-muted-foreground font-sans text-xs leading-relaxed font-light uppercase">
                 Aura HQ Outpost
                 <br />
                 820 Flagship Avenue
@@ -214,10 +219,10 @@ export function Footer({ width = "default" }: { width?: FooterWidth }) {
             </div>
 
             <div className="flex flex-col gap-2">
-              <span className="font-mono text-[9px] tracking-widest text-foreground font-bold uppercase">
+              <span className="text-foreground font-mono text-[9px] font-bold tracking-widest uppercase">
                 CONNECT
               </span>
-              <div className="flex gap-4 text-muted-foreground">
+              <div className="text-muted-foreground flex gap-4">
                 <a
                   href="https://instagram.com"
                   target="_blank"
@@ -225,7 +230,10 @@ export function Footer({ width = "default" }: { width?: FooterWidth }) {
                   className="hover:text-foreground transition-colors"
                   aria-label="AURA on Instagram"
                 >
-                  <IconBrandInstagram className="size-5 stroke-[1.5]" aria-hidden="true" />
+                  <IconBrandInstagram
+                    className="size-5 stroke-[1.5]"
+                    aria-hidden="true"
+                  />
                 </a>
                 <a
                   href="https://twitter.com"
@@ -234,7 +242,10 @@ export function Footer({ width = "default" }: { width?: FooterWidth }) {
                   className="hover:text-foreground transition-colors"
                   aria-label="AURA on Twitter"
                 >
-                  <IconBrandTwitter className="size-5 stroke-[1.5]" aria-hidden="true" />
+                  <IconBrandTwitter
+                    className="size-5 stroke-[1.5]"
+                    aria-hidden="true"
+                  />
                 </a>
                 <a
                   href="https://youtube.com"
@@ -243,7 +254,10 @@ export function Footer({ width = "default" }: { width?: FooterWidth }) {
                   className="hover:text-foreground transition-colors"
                   aria-label="AURA on YouTube"
                 >
-                  <IconBrandYoutube className="size-5 stroke-[1.5]" aria-hidden="true" />
+                  <IconBrandYoutube
+                    className="size-5 stroke-[1.5]"
+                    aria-hidden="true"
+                  />
                 </a>
               </div>
             </div>
@@ -252,47 +266,47 @@ export function Footer({ width = "default" }: { width?: FooterWidth }) {
 
         <Separator className="bg-border/60" />
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 py-2 select-none">
+        <div className="grid grid-cols-2 gap-6 py-2 select-none md:grid-cols-4">
           <div className="flex items-center gap-3">
-            <IconTruck className="size-5 text-muted-foreground stroke-[1.2]" />
+            <IconTruck className="text-muted-foreground size-5 stroke-[1.2]" />
             <div className="flex flex-col text-left">
-              <span className="font-sans text-[11px] font-semibold text-foreground uppercase">
+              <span className="text-foreground font-sans text-[11px] font-semibold uppercase">
                 FREE SHIPPING
               </span>
-              <span className="font-mono text-[9px] text-muted-foreground uppercase mt-0.5">
+              <span className="text-muted-foreground mt-0.5 font-mono text-[9px] uppercase">
                 ON ORDERS OVER ₹15,000
               </span>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <IconLock className="size-5 text-muted-foreground stroke-[1.2]" />
+            <IconLock className="text-muted-foreground size-5 stroke-[1.2]" />
             <div className="flex flex-col text-left">
-              <span className="font-sans text-[11px] font-semibold text-foreground uppercase">
+              <span className="text-foreground font-sans text-[11px] font-semibold uppercase">
                 SECURE PAYMENT
               </span>
-              <span className="font-mono text-[9px] text-muted-foreground uppercase mt-0.5">
+              <span className="text-muted-foreground mt-0.5 font-mono text-[9px] uppercase">
                 256-BIT ENCRYPTED SSL
               </span>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <IconShieldCheck className="size-5 text-muted-foreground stroke-[1.2]" />
+            <IconShieldCheck className="text-muted-foreground size-5 stroke-[1.2]" />
             <div className="flex flex-col text-left">
-              <span className="font-sans text-[11px] font-semibold text-foreground uppercase">
+              <span className="text-foreground font-sans text-[11px] font-semibold uppercase">
                 AUTHENTIC ORIGINAL
               </span>
-              <span className="font-mono text-[9px] text-muted-foreground uppercase mt-0.5">
+              <span className="text-muted-foreground mt-0.5 font-mono text-[9px] uppercase">
                 DIRECT FROM ARCHIVE
               </span>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <IconCreditCard className="size-5 text-muted-foreground stroke-[1.2]" />
+            <IconCreditCard className="text-muted-foreground size-5 stroke-[1.2]" />
             <div className="flex flex-col text-left">
-              <span className="font-sans text-[11px] font-semibold text-foreground uppercase">
+              <span className="text-foreground font-sans text-[11px] font-semibold uppercase">
                 FLEXIBLE PAY
               </span>
-              <span className="font-mono text-[9px] text-muted-foreground uppercase mt-0.5">
+              <span className="text-muted-foreground mt-0.5 font-mono text-[9px] uppercase">
                 AMEX, VISA, APPLE PAY
               </span>
             </div>
@@ -301,11 +315,11 @@ export function Footer({ width = "default" }: { width?: FooterWidth }) {
 
         <Separator className="bg-border/60" />
 
-        <div className="flex flex-col items-center gap-6 text-center md:flex-row md:items-center md:justify-between md:gap-4 md:text-left text-muted-foreground/60 font-mono text-[9px] tracking-[0.18em] uppercase">
+        <div className="text-muted-foreground/60 flex flex-col items-center gap-6 text-center font-mono text-[9px] tracking-[0.18em] uppercase md:flex-row md:items-center md:justify-between md:gap-4 md:text-left">
           <span className="max-w-[min(100%,28rem)] leading-relaxed">
             © 2026 AURA ARCHIVES INC. ALL RIGHTS RESERVED.
           </span>
-          <div className="flex flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:justify-center md:justify-end sm:gap-x-4 sm:gap-y-2 w-full md:w-auto">
+          <div className="flex w-full flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-4 sm:gap-y-2 md:w-auto md:justify-end">
             <span className="hover:text-foreground cursor-pointer transition-colors">
               Privacy Policy
             </span>

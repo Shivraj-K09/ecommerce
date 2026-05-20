@@ -36,7 +36,7 @@ export function CartBagLine({
   }
 
   return (
-    <div className="flex gap-6 md:gap-8 py-6 border-b border-foreground/10">
+    <div className="border-foreground/10 flex gap-6 border-b py-6 md:gap-8">
       <ViewTransition
         name={`product-image-${item.product.id}`}
         share="morph"
@@ -44,7 +44,7 @@ export function CartBagLine({
       >
         <Link
           href={productPath}
-          className="relative block w-24 md:w-28 aspect-3/4 bg-muted/5 border border-foreground/5 cursor-pointer shrink-0 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+          className="bg-muted/5 border-foreground/5 focus-visible:ring-ring/50 relative block aspect-3/4 w-24 shrink-0 cursor-pointer border focus-visible:ring-3 focus-visible:outline-none md:w-28"
         >
           <Image
             src={item.product.image}
@@ -57,10 +57,10 @@ export function CartBagLine({
         </Link>
       </ViewTransition>
 
-      <div className="flex-1 flex flex-col justify-between text-left">
+      <div className="flex flex-1 flex-col justify-between text-left">
         <div className="flex flex-col gap-1">
-          <div className="flex justify-between items-baseline gap-4">
-            <span className="font-mono text-[10px] tracking-wider text-muted-foreground uppercase">
+          <div className="flex items-baseline justify-between gap-4">
+            <span className="text-muted-foreground font-mono text-[10px] tracking-wider uppercase">
               {CATEGORY_LABEL_NAMES[item.product.category] ||
                 item.product.category}
             </span>
@@ -70,7 +70,7 @@ export function CartBagLine({
               share="morph"
               default="none"
             >
-              <span className="font-mono text-xs md:text-sm tracking-wider text-foreground">
+              <span className="text-foreground font-mono text-xs tracking-wider md:text-sm">
                 {formatInr(item.product.price * item.quantity)}
               </span>
             </ViewTransition>
@@ -81,10 +81,10 @@ export function CartBagLine({
             share="morph"
             default="none"
           >
-            <h3 className="font-sans font-light text-base md:text-lg uppercase tracking-wider mt-1">
+            <h3 className="mt-1 font-sans text-base font-light tracking-wider uppercase md:text-lg">
               <Link
                 href={productPath}
-                className="text-foreground hover:text-muted-foreground transition-colors focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+                className="text-foreground hover:text-muted-foreground focus-visible:ring-ring/50 transition-colors focus-visible:ring-3 focus-visible:outline-none"
               >
                 {item.product.name}
               </Link>
@@ -92,13 +92,13 @@ export function CartBagLine({
           </ViewTransition>
 
           {item.selectedColor && (
-            <span className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase mt-1">
+            <span className="text-muted-foreground mt-1 font-mono text-[10px] tracking-widest uppercase">
               COLOR: {item.selectedColor}
             </span>
           )}
         </div>
 
-        <div className="flex items-center justify-between mt-6">
+        <div className="mt-6 flex items-center justify-between">
           <div
             className="flex items-center gap-4"
             role="group"
@@ -108,12 +108,12 @@ export function CartBagLine({
               type="button"
               onClick={handleDecrement}
               aria-label={`Decrease quantity of ${item.product.name}`}
-              className="font-mono text-sm text-muted-foreground hover:text-foreground cursor-pointer transition-colors p-1"
+              className="text-muted-foreground hover:text-foreground cursor-pointer p-1 font-mono text-sm transition-colors"
             >
-              —
+              −
             </button>
             <span
-              className="font-mono text-[11px] text-foreground font-semibold min-w-[16px] text-center"
+              className="text-foreground min-w-[16px] text-center font-mono text-[11px] font-semibold"
               aria-live="polite"
             >
               {item.quantity}
@@ -122,7 +122,7 @@ export function CartBagLine({
               type="button"
               onClick={handleIncrement}
               aria-label={`Increase quantity of ${item.product.name}`}
-              className="font-mono text-sm text-muted-foreground hover:text-foreground cursor-pointer transition-colors p-1"
+              className="text-muted-foreground hover:text-foreground cursor-pointer p-1 font-mono text-sm transition-colors"
             >
               +
             </button>
@@ -131,7 +131,7 @@ export function CartBagLine({
           <button
             type="button"
             onClick={handleRemoveLine}
-            className="font-mono text-[9px] tracking-widest text-muted-foreground hover:text-destructive hover:underline transition-colors uppercase cursor-pointer"
+            className="text-muted-foreground hover:text-destructive cursor-pointer font-mono text-[9px] tracking-widest uppercase transition-colors hover:underline"
           >
             REMOVE
           </button>
@@ -140,4 +140,3 @@ export function CartBagLine({
     </div>
   );
 }
-

@@ -24,14 +24,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} min-h-screen antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-screen flex flex-col" suppressHydrationWarning>
+      <body className="flex min-h-screen flex-col" suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
